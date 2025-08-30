@@ -1,0 +1,2972 @@
+/* =========================
+   light theme like the mock
+   ========================= */
+:root{
+  --bg: #f5f8ff;
+  --panel: #ffffff;
+  --ink: #0f172a;
+  --muted: #6b7280;
+  --line: #e8edf6;
+
+  --brand: #2563eb;     /* primary blue */
+  --brand-2: #3b82f6;   /* lighter blue */
+  --brand-soft: #eaf2ff;/* very light blue */
+
+  --ok: #10b981;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+
+  --radius: 18px;
+  --shadow-sm: 0 2px 10px rgba(15, 23, 42, .06);
+  --shadow: 0 14px 40px rgba(15, 23, 42, .08);
+  --shadow-strong: 0 30px 60px rgba(15, 23, 42, .12);
+}
+
+/* page base with soft blue glow */
+*{ box-sizing: border-box; }
+html, body, #root{ height: 100%; }
+body{
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--ink);
+  background:
+    radial-gradient(900px 500px at 90% 0%, rgba(59,130,246,.08), transparent 60%),
+    radial-gradient(900px 600px at 0% -20%, rgba(37,99,235,.10), transparent 60%),
+    #f6f9ff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container{ max-width: 1100px; margin: 0 auto; padding: 24px; }
+a{ color: var(--brand); text-decoration: none; }
+a:hover{ text-decoration: underline; }
+
+/* =========================
+   top nav like the mock
+   ========================= */
+.siteNav{
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 18px;
+  padding: 14px 22px;
+  backdrop-filter: saturate(160%) blur(12px);
+  background:
+    linear-gradient(180deg, rgba(15,23,42,.75), rgba(15,23,42,.70)),
+    radial-gradient(800px 400px at 10% -40%, rgba(37,99,235,.35), transparent 60%),
+    radial-gradient(700px 350px at 90% -30%, rgba(59,130,246,.25), transparent 60%);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.siteNav a{ color: #e7eefc; padding: 8px 10px; border-radius: 12px; }
+.siteNav a:hover{ background: rgba(255,255,255,.08); text-decoration: none; }
+
+/* =========================
+   headings and text
+   ========================= */
+h1,h2,h3{ margin: 0 0 12px; line-height: 1.15; letter-spacing: -.01em; }
+h1{ font-size: 32px; }
+h2{ font-size: 26px; }
+h3{ font-size: 18px; color: var(--muted); font-weight: 600; }
+p{ margin: 8px 0 0; color: var(--muted); }
+
+/* =========================
+   cards and layout
+   ========================= */
+.card{
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.cardHeader{
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.cardBody{ padding: 18px; }
+
+/* hero card like the big blue header */
+.card.hero,
+.card[data-hero="true"]{
+  color: white;
+  background:
+    radial-gradient(900px 320px at -10% -20%, rgba(59,130,246,.35), transparent 60%),
+    radial-gradient(700px 260px at 120% -20%, rgba(16,185,129,.20), transparent 60%),
+    linear-gradient(180deg, var(--brand-2), var(--brand));
+  border: none;
+  box-shadow: var(--shadow-strong);
+}
+.card.hero .cardHeader,
+.card[data-hero="true"] .cardHeader{
+  color: inherit; border: none; padding: 0 0 8px 0;
+}
+.card.hero .cardBody,
+.card[data-hero="true"] .cardBody{ padding: 0; }
+
+/* =========================
+   buttons that match the mock
+   ========================= */
+.btn{
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform .16s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+}
+.btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
+
+.btnPrimary{
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--brand-2), var(--brand));
+}
+.btnPrimary:hover{ filter: brightness(.98); }
+
+.btnGhost{
+  background: #f4f7ff;
+  border-color: #dbe6ff;
+  color: #0f172a;
+}
+.btnGhost:hover{ background: #eef3ff; }
+
+.btnDanger{
+  color: #fff; border-color: transparent;
+  background: linear-gradient(180deg, rgba(239,68,68,.95), rgba(239,68,68,.86));
+}
+
+.btnSmall{ padding: 8px 12px; border-radius: 12px; font-size: 14px; }
+.btnXL{ padding: 16px 18px; font-size: 16px; border-radius: 16px; }
+.btnBlock{ width: 100%; justify-content: center; }
+
+/* soft glow on hover like premium buttons */
+.btnGlow{ box-shadow: var(--shadow-sm), 0 0 0 0 rgba(37,99,235,0); }
+.btnGlow:hover{ box-shadow: var(--shadow), 0 10px 32px rgba(37,99,235,.18); }
+
+/* quick link grid */
+.quickLinks{
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top: 14px;
+}
+.quickLinks a, .quickLinks button{
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e6ecfb;
+  box-shadow: var(--shadow-sm);
+}
+
+/* =========================
+   inputs and search
+   ========================= */
+.input,
+input[type="text"], input[type="email"], input[type="password"],
+input[type="date"], textarea, select{
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f7f9ff;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s ease, background .15s ease, box-shadow .2s ease;
+}
+.input:focus, textarea:focus, select:focus, input[type="date"]:focus{
+  border-color: #cfe0ff;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+}
+.helpText{ color: var(--muted); font-size: 12px; }
+
+/* =========================
+   table like the mock
+   ========================= */
+.table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.table thead th{
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 700;
+  background: linear-gradient(180deg, rgba(2,6,23,.02), transparent);
+}
+.table td{
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  color: #334155;
+}
+.table tr:last-child td{ border-bottom: none; }
+.table tbody tr:hover{ background: #f8fbff; }
+.table .number{ text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ranks and badges */
+.rank{
+  width: 36px; height: 36px; border-radius: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--brand-soft);
+  color: var(--brand); font-weight: 700;
+  border: 1px solid #dfe8ff;
+}
+
+.badge{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 12px; font-weight: 600;
+  background: #f7f9ff;
+}
+.badgeApproved{ background: rgba(16,185,129,.12); color: var(--ok); border-color: rgba(16,185,129,.25); }
+.badgeRejected{ background: rgba(239,68,68,.12); color: var(--bad); border-color: rgba(239,68,68,.25); }
+.badgePending{ background: rgba(245,158,11,.14); color: var(--warn); border-color: rgba(245,158,11,.25); }
+
+/* note messages */
+.noteOk{ color: var(--ok); }
+.noteErr{ color: var(--bad); }
+
+/* modal if you add later */
+.modalOverlay{
+  position: fixed; inset: 0; background: rgba(2,6,23,.55);
+  display: grid; place-items: center; z-index: 50;
+}
+.modal{
+  width: min(520px, 96%);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-strong);
+}
+
+/* responsive polish */
+@media (max-width: 640px){
+  .container{ padding: 16px; }
+  .btn, .buttonLink{ padding: 10px 12px; }
+  h1{ font-size: 26px; }
+}
+
+/* optional dark mode that still feels premium */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1220;
+    --panel:#0f172a;
+    --ink:#e5e7eb;
+    --muted:#9aa3b2;
+    --line:#1e2637;
+    --brand:#60a5fa;
+    --brand-2:#3b82f6;
+    --brand-soft:#0b1730;
+    --shadow-sm: 0 2px 10px rgba(0,0,0,.25);
+    --shadow: 0 14px 40px rgba(0,0,0,.32);
+    --shadow-strong: 0 30px 60px rgba(0,0,0,.45);
+  }
+  body{
+    background:
+      radial-gradient(900px 520px at 90% 0%, rgba(59,130,246,.18), transparent 60%),
+      radial-gradient(900px 620px at 0% -20%, rgba(37,99,235,.22), transparent 60%),
+      #0b1220;
+  }
+  .siteNav{ border-bottom-color: rgba(255,255,255,.06); }
+  .quickLinks a, .quickLinks button{
+    background: #121b2c; border-color: #1c2940; color: #e6edff;
+  }
+  .table tbody tr:hover{ background: rgba(255,255,255,.03); }
+}
+
+/* force white text on the dark table */
+.table,
+.table td,
+.table th {
+  color: #f1f5ff !important;
+}
+
+/* header cells a bit brighter */
+.table thead th {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* lighter borders for dark panel */
+.table,
+.table td,
+.table th {
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* nicer hover on dark background */
+.table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* muted empty state row */
+.table td[colspan] {
+  color: #c9d7ff !important;
+}
+
+/* links inside table should stay readable */
+.table a {
+  color: #cfe0ff !important;
+}
+
+/* date input should show black text */
+input[type="date"]{
+  background: #ffffff !important;
+  color: #0f172a !important;              /* black text */
+  border: 1px solid #e6ecfb;
+}
+
+/* make the inner date parts black on chrome */
+input[type="date"]::-webkit-datetime-edit,
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-year-field,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field{
+  color: #0f172a !important;
+}
+
+/* if the field is disabled keep it readable */
+input[type="date"]:disabled{
+  background: #f3f7ff !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1; /* cancel the faded look */
+}
+
+/* calendar icon visibility */
+input[type="date"]::-webkit-calendar-picker-indicator{
+  opacity: .8;
+}
+
+/* =========================
+   Task Admin polish
+   ========================= */
+
+/* title spacing */
+h2 {
+  font-size: 28px;
+  margin: 0 0 16px;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+}
+
+/* form controls */
+form input,
+form select,
+form label {
+  font-size: 14px;
+}
+
+form input,
+form select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f7f9ff;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s ease, background .15s ease, box-shadow .2s ease;
+}
+
+form input:focus,
+form select:focus {
+  border-color: #cfe0ff;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+}
+
+/* compact width for points input */
+input[name="points"] {
+  max-width: 90px;
+  text-align: center;
+}
+
+/* checkbox chip */
+label > input[type="checkbox"] {
+  margin-right: 6px;
+}
+form label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f3f6ff;
+  border: 1px dashed var(--line);
+  color: var(--ink);
+}
+
+/* buttons look premium even without classes */
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(15,23,42,.06);
+  transition: transform .16s ease, box-shadow .2s ease, filter .2s ease;
+}
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 40px rgba(15,23,42,.08);
+}
+
+/* submit is primary, cancel is ghost */
+form button[type="submit"] {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--brand-2), var(--brand));
+}
+form button[type="button"] {
+  background: #f4f7ff;
+  border-color: #dbe6ff;
+}
+
+/* table makeover even if inline attributes exist */
+table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line) !important;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+thead th {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 700;
+  color: #1f2a44;
+  background: linear-gradient(180deg, rgba(2,6,23,.02), transparent);
+}
+
+tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  color: #334155;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #f8fbff; }
+
+/* action buttons in the table */
+td > button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+td > button:first-child {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--brand-2), var(--brand));
+}
+td > button:last-child {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, rgba(239,68,68,.95), rgba(239,68,68,.86));
+}
+
+/* empty row style */
+td[colspan] {
+  color: #6b7280;
+  background: #fafcff;
+}
+
+/* responsive touch */
+@media (max-width: 700px) {
+  thead { display: none; }
+  table, tbody, tr, td { display: block; width: 100%; }
+  tbody tr { border-bottom: 1px solid var(--line); }
+  tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #475569;
+  }
+}
+
+/* =========================
+   TASK ADMIN pro theme
+   light inputs and controls
+   dark table with white text
+   ========================= */
+
+/* heading */
+h2 {
+  font-size: 28px;
+  margin: 0 0 16px;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+  color: #ffffff;
+}
+
+/* form controls stay light with dark text */
+form input,
+form select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #eceff7;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0f172a;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .2s ease, background .2s ease;
+}
+form input:focus,
+form select:focus {
+  border-color: #f4f7fb;
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+  background: #ffffff;
+}
+input[name="points"]{ max-width: 90px; text-align: center; }
+
+form label{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f3f6ff;
+  border: 1px dashed #e6ecfb;
+  color: #0f172a;
+}
+form label > input[type="checkbox"]{ margin-right: 6px; }
+
+/* primary and ghost buttons for the form row */
+form button[type="submit"]{
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, #3b82f6, #2563eb);
+  box-shadow: 0 2px 10px rgba(15,23,42,.08);
+}
+form button[type="button"]{
+  color: #0f172a;
+  border: 1px solid #dbe6ff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: #f4f7ff;
+}
+
+/* =========================
+   DARK TABLE with white text
+   applies to your Task Admin table
+   ========================= */
+table{
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100%;
+  background: #0f172a;                  /* dark navy */
+  color: #eaf1ff !important;            /* light text */
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(2,6,23,.20);
+}
+thead th{
+  color: #ffffff !important;
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+tbody td{
+  color: #d9e4ff !important;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+tbody tr:last-child td{ border-bottom: none; }
+tbody tr:hover{ background: rgba(255,255,255,.06); }
+
+/* action buttons inside the dark table */
+td > button{
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  border: 1px solid transparent;
+  color: #fff;
+}
+td > button:first-child{                  /* Edit */
+  background: linear-gradient(180deg, #60a5fa, #3b82f6);
+}
+td > button:last-child{                   /* Delete */
+  background: linear-gradient(180deg, #ef4444, #dc2626);
+}
+
+/* empty message row stays readable */
+td[colspan]{
+  color: #c9d7ff !important;
+  background: rgba(255,255,255,.02);
+}
+
+/* =========================
+   extra polish
+   ========================= */
+::placeholder{ color: #94a3b8; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
+
+/* make hero title light */
+.card.hero h1,
+.card.hero h2,
+.card.hero .cardHeader h1,
+.card.hero .cardHeader h2{
+  color:#f5f9ff !important;
+  font-weight:600;
+  text-shadow:0 1px 1px rgba(0,0,0,.25);
+}
+
+/* softer subtitle on hero */
+.card.hero p{
+  color:rgba(255,255,255,.85) !important;
+}
+
+/* USER and ADMIN login layout and form styling, heading text comes from JSX now */
+#root > div:has(> h2 + form){
+  padding: 32px !important;
+  display: grid;
+  place-items: start;
+  gap: 16px;
+}
+
+#root > div:has(> h2 + form) > form{
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 140px;
+  gap: 14px;
+  width: min(960px, 100%);
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e6ecfb;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(15,23,42,.08);
+  align-items: center;
+}
+
+#root > div:has(> h2 + form) > form input{
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e6ecfb;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0f172a;
+  outline: none;
+  transition: border-color .15s, box-shadow .2s;
+}
+#root > div:has(> h2 + form) > form input::placeholder{
+  color: #94a3b8;
+}
+#root > div:has(> h2 + form) > form input:focus{
+  border-color: #cfe0ff;
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+}
+
+#root > div:has(> h2 + form) > form button[type="submit"]{
+  height: 46px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(180deg, #3b82f6, #2563eb);
+  box-shadow: 0 10px 30px rgba(37,99,235,.25);
+  cursor: pointer;
+  transition: transform .15s, box-shadow .2s, filter .2s;
+}
+#root > div:has(> h2 + form) > form button[type="submit"]:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(37,99,235,.28);
+  filter: brightness(.98);
+}
+#root > div:has(> h2 + form) > form button[type="submit"]:active{
+  transform: translateY(0);
+}
+
+@media (max-width: 720px){
+  #root > div:has(> h2 + form) > form{
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  #root > div:has(> h2 + form) > form button[type="submit"]{
+    width: 100%;
+  }
+}
+
+#root > div:has(> h2 + form) > form input:-webkit-autofill{
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  -webkit-text-fill-color: #0f172a;
+}
+
+/* =========================
+   DASHBOARD  light pro look
+   targets the page that has: h2 + p + label + input[type=date]
+   ========================= */
+
+:root{
+  --g-blue:#1a73e8;
+  --g-bg:#f7f9fe;
+  --g-surface:#ffffff;
+  --g-line:#e8edf6;
+  --g-text:#1f2937;
+  --g-muted:#6b7280;
+  --g-success:#12b76a;
+  --g-danger:#e11d48;
+  --g-warning:#f59e0b;
+  --g-radius:16px;
+  --g-shadow:0 20px 60px rgba(2,6,23,.06);
+}
+
+/* page wrap */
+#root > div:has(> h2 + p + label + input[type="date"]){
+  max-width: 980px !important;
+  margin: 0 auto !important;
+  padding: 24px 20px !important;
+}
+
+/* title and hello line */
+#root > div:has(> h2 + p + label + input[type="date"]) > h2{
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  letter-spacing: .1px !important;
+  margin: 0 0 6px !important;
+  color: var(--g-text) !important;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) > p:first-of-type{
+  margin: 0 0 12px !important;
+  color: var(--g-muted) !important;
+}
+
+/* date label and input */
+#root > div:has(> h2 + p + label + input[type="date"]) > label{
+  font-weight: 600;
+  color: var(--g-text);
+  display: inline-block;
+  margin-bottom: 6px;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) > input[type="date"]{
+  width: 100%;
+  padding: 12px 14px !important;
+  border: 1px solid var(--g-line) !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: var(--g-text) !important;
+  box-shadow: 0 1px 0 rgba(2,6,23,.02) !important;
+}
+
+/* progress info bar just under the date */
+#root > div:has(> h2 + p + label + input[type="date"]) > input[type="date"] + div{
+  margin: 14px 0 !important;
+  padding: 10px 14px !important;
+  background: var(--g-surface) !important;
+  border: 1px solid var(--g-line) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--g-shadow) !important;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) > input[type="date"] + div strong{
+  color: var(--g-text);
+}
+
+/* section heading */
+#root > div:has(> h2 + p + label + input[type="date"]) h3{
+  margin: 18px 0 10px !important;
+  font-size: 18px !important;
+  color: var(--g-text) !important;
+}
+
+/* task cards grid */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div{
+  display: grid !important;
+  gap: 14px !important;
+}
+
+/* task card */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div > div{
+  border: 1px solid var(--g-line) !important;
+  border-radius: var(--g-radius) !important;
+  padding: 14px !important;
+  background: var(--g-surface) !important; /* your code sets bg on approved etc, this will be overridden by inline styles when present */
+  box-shadow: var(--g-shadow) !important;
+}
+
+/* card header row */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div > div > div:first-child{
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div > div strong{
+  font-size: 16px !important;
+  color: var(--g-text) !important;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div > div span{
+  color: var(--g-muted) !important;
+}
+
+/* buttons inside dashboard */
+#root > div:has(> h2 + p + label + input[type="date"]) button{
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  border: 1px solid transparent !important;
+  background: linear-gradient(180deg, #3b82f6, var(--g-blue)) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 24px rgba(26,115,232,.24) !important;
+  cursor: pointer !important;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) button:disabled{
+  opacity: .6 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+/* resubmit button on the right feels quiet */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div > div > div:first-child button{
+  background: #f4f7ff !important;
+  color: var(--g-text) !important;
+  border: 1px solid #dbe6ff !important;
+  box-shadow: none !important;
+}
+
+/* textarea */
+#root > div:has(> h2 + p + label + input[type="date"]) textarea{
+  width: 100% !important;
+  padding: 12px 14px !important;
+  border: 1px solid var(--g-line) !important;
+  border-radius: 12px !important;
+  background: #f8fbff !important;
+  color: var(--g-text) !important;
+  outline: none !important;
+  resize: vertical !important;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) textarea:disabled{
+  background: #f5f7fb !important;
+}
+
+/* file input and submit row */
+#root > div:has(> h2 + p + label + input[type="date"]) input[type="file"]{
+  font-size: 13px !important;
+  padding: 8px !important;
+  border: 1px dashed var(--g-line) !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: var(--g-muted) !important;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) a{
+  color: var(--g-blue) !important;
+  text-decoration: none !important;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) a:hover{
+  text-decoration: underline !important;
+}
+
+/* review box inside task card */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div > div > div:last-child{
+  background: #fcfdff !important;
+  border: 1px dashed var(--g-line) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  font-size: 13px !important;
+  color: var(--g-text) !important;
+}
+
+/* score section at bottom */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + p{
+  padding: 10px 12px !important;
+  background: var(--g-surface) !important;
+  border: 1px solid var(--g-line) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--g-shadow) !important;
+}
+
+/* status colors kept readable */
+.badgeApproved, .status-approved{ color: var(--g-success) !important; }
+.badgeRejected, .status-rejected{ color: var(--g-danger) !important; }
+.badgePending,  .status-pending { color: var(--g-warning) !important; }
+
+/* =========================================
+   Professional dashboard backgrounds
+   Pick one palette by keeping its block
+   and remove the others if you want
+   ========================================= */
+
+/* default palette — Blue Breeze */
+:root{
+  --bg-1:#f7faff;   /* top tint */
+  --bg-2:#ffffff;   /* bottom tint */
+  --blob-a:rgba(26,115,232,.10);  /* blue glow */
+  --blob-b:rgba(99,102,241,.08);  /* indigo glow */
+}
+
+/* Mint Mist palette
+:root{
+  --bg-1:#f6fffb;
+  --bg-2:#ffffff;
+  --blob-a:rgba(16,185,129,.12);
+  --blob-b:rgba(59,130,246,.06);
+}
+*/
+
+/* Soft Lavender palette
+:root{
+  --bg-1:#faf7ff;
+  --bg-2:#ffffff;
+  --blob-a:rgba(139,92,246,.12);
+  --blob-b:rgba(59,130,246,.06);
+}
+*/
+
+/* Warm Sand palette
+:root{
+  --bg-1:#fffaf6;
+  --bg-2:#ffffff;
+  --blob-a:rgba(245,158,11,.10);
+  --blob-b:rgba(59,130,246,.06);
+}
+*/
+
+/* apply the background site wide */
+html, body{
+  background:
+    radial-gradient(900px 520px at 92% -10%, var(--blob-a), transparent 60%),
+    radial-gradient(800px 460px at -8% 12%, var(--blob-b), transparent 60%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-2)) !important;
+}
+
+/* a little extra depth only for the dashboard page */
+#root > div:has(> h2 + p + label + input[type="date"]){
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.92));
+  border-radius: 24px;
+  box-shadow:
+    0 40px 80px rgba(2,6,23,.06),
+    0 2px 0 rgba(2,6,23,.02);
+}
+
+/* make checklist cards sit nicely on the new background */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div > div{
+  background: #ffffff;
+  border: 1px solid #e8edf6;
+  box-shadow: 0 18px 46px rgba(2,6,23,.07);
+}
+
+/* soften the progress bar under the date */
+#root > div:has(> h2 + p + label + input[type="date"]) > input[type="date"] + div{
+  background: rgba(255,255,255,.92);
+  border: 1px solid #e8edf6;
+  box-shadow: 0 12px 32px rgba(2,6,23,.06);
+}
+
+/* textarea tint so it feels airy on the new background */
+#root > div:has(> h2 + p + label + input[type="date"]) textarea{
+  background: #f5f8ff;
+  border-color: #e8edf6;
+}
+
+/* ===== Pro page background override ===== */
+:root{
+  /* pick your palette */
+  --pageTop:#f2f6ff;      /* top tint */
+  --pageBottom:#ffffff;   /* bottom tint */
+  --glowBlue:rgba(26,115,232,.12);
+  --glowIndigo:rgba(99,102,241,.10);
+
+  /* you can try these instead:
+     --pageTop:#f6fffb; --glowBlue:rgba(16,185,129,.12); --glowIndigo:rgba(59,130,246,.07);
+     --pageTop:#faf7ff; --glowBlue:rgba(139,92,246,.12); --glowIndigo:rgba(59,130,246,.07);
+  */
+}
+
+/* force the site background */
+html, body{
+  background: linear-gradient(180deg, var(--pageTop), var(--pageBottom)) !important;
+}
+
+/* place decorative glows behind all content */
+#root::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;                       /* behind everything */
+  background:
+    radial-gradient(900px 520px at 92% -10%, var(--glowBlue), transparent 60%),
+    radial-gradient(800px 460px at -8% 12%, var(--glowIndigo), transparent 60%);
+  pointer-events: none;
+}
+
+/* make the dashboard panel float on the new background */
+#root > div:has(> h2 + p + label + input[type="date"]){
+  background: rgba(255,255,255,.94);
+  border: 1px solid #e8edf6;
+  border-radius: 22px;
+  box-shadow: 0 30px 70px rgba(2,6,23,.07);
+}
+
+/* ===== dashboard background v2  ===== */
+/* soft google like blue with smooth glows */
+:root{
+  --pageTop:#f3f7ff;
+  --pageBottom:#ffffff;
+  --glowA:rgba(26,115,232,.14);   /* blue glow */
+  --glowB:rgba(99,102,241,.12);   /* indigo glow */
+}
+
+html, body, #root{ min-height:100%; }
+
+/* base gradient */
+html, body{
+  background: linear-gradient(180deg, var(--pageTop) 0%, var(--pageBottom) 100%) !important;
+}
+
+/* keep the app canvas transparent */
+#root{ background: transparent !important; }
+
+/* two wide color glows behind everything */
+body::before,
+body::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+body::before{
+  background:
+    radial-gradient(60rem 32rem at 85% -10%, var(--glowA), transparent 60%),
+    radial-gradient(50rem 28rem at -10% 30%, var(--glowB), transparent 60%);
+}
+body::after{
+  background:
+    radial-gradient(55rem 30rem at 20% 115%, rgba(26,115,232,.08), transparent 60%);
+}
+
+/* make the dashboard panel float nicely */
+#root > div:has(> h2 + p + label + input[type="date"]){
+  position: relative;
+  z-index: 1;
+  background: rgba(255,255,255,.98);
+  border: 1px solid #e8edf6;
+  border-radius: 22px;
+  box-shadow: 0 28px 60px rgba(2,6,23,.08);
+  backdrop-filter: saturate(120%) blur(3px);
+  margin-bottom: 40px; /* avoids a visual seam near the fold */
+}
+
+/* task cards sit well on the new background */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div > div{
+  background:#ffffff !important;
+  border:1px solid #e8edf6 !important;
+  box-shadow: 0 12px 30px rgba(2,6,23,.06) !important;
+}
+
+/* make the background glow a touch softer */
+body::before{
+  background:
+    radial-gradient(52rem 28rem at 85% -8%, rgba(26,115,232,.10), transparent 60%),
+    radial-gradient(44rem 24rem at -8% 28%, rgba(99,102,241,.08), transparent 60%);
+}
+
+/* keep the main panel a little narrower for focus */
+#root > div:has(> h2 + p + label + input[type="date"]){
+  max-width: 880px;
+  margin: 24px auto;
+  box-shadow: 0 24px 52px rgba(2,6,23,.07);
+}
+
+/* lighter card shadow so the stack feels calmer */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div > div{
+  box-shadow: 0 10px 26px rgba(2,6,23,.06);
+}
+
+/* headings a bit stronger for contrast */
+#root > div:has(> h2 + p + label + input[type="date"]) > h2{
+  color: #0f172a;
+}
+
+/* ===== Light nav bar that matches the new dashboard ===== */
+.siteNav{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  backdrop-filter: saturate(140%) blur(8px);
+  background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.88));
+  border-bottom: 1px solid #e6ecfb;
+  box-shadow: 0 8px 24px rgba(2,6,23,.06);
+}
+
+/* subtle blue accent line under the bar */
+.siteNav::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(26,115,232,.18), transparent 30%, transparent 70%, rgba(99,102,241,.16));
+  pointer-events: none;
+}
+
+/* links on the nav */
+.siteNav a{
+  color: #1f2a44;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+.siteNav a:hover{
+  background: #eef4ff;
+  color: #1a73e8;
+  text-decoration: none;
+  box-shadow: inset 0 0 0 1px #dbe6ff;
+}
+
+/* logout button size inside nav */
+.siteNav .btn,
+.siteNav button{
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+  /* ===== top nav light bar override ===== */
+
+/* 1. main selector if your header uses className="siteNav" */
+.siteNav{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+
+  width: 100% !important;
+  padding: 12px 18px !important;
+
+  background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.90)) !important;
+  border-bottom: 1px solid #e6ecfb !important;
+  box-shadow: 0 8px 24px rgba(2,6,23,.06) !important;
+
+  backdrop-filter: saturate(140%) blur(8px);
+  -webkit-backdrop-filter: saturate(140%) blur(8px);
+}
+
+/* tiny blue accent line */
+.siteNav::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(26,115,232,.20), transparent 35%, transparent 65%, rgba(99,102,241,.18));
+  pointer-events: none;
+}
+
+/* nav links */
+.siteNav a{
+  color: #1f2a44 !important;
+  font-weight: 600 !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  text-decoration: none !important;
+}
+.siteNav a:hover{
+  background: #eef4ff !important;
+  color: #1a73e8 !important;
+  box-shadow: inset 0 0 0 1px #dbe6ff !important;
+}
+
+/* logout button inside the bar */
+.siteNav .btn, .siteNav button{
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+}
+
+/* 2. fallback selectors in case your header is <nav> or <header> without the siteNav class */
+#root > nav:first-child,
+#root > header:first-child{
+  all: unset; /* clear weird defaults */
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 100;
+  width: 100%;
+  padding: 12px 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.90));
+  border-bottom: 1px solid #c4cee7;
+  box-shadow: 0 8px 24px rgba(2,6,23,.06);
+  backdrop-filter: saturate(140%) blur(8px);
+}
+#root > nav:first-child a,
+#root > header:first-child a{
+  color: #1f2a44;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+}
+#root > nav:first-child a:hover,
+#root > header:first-child a:hover{
+  background: #eef4ff;
+  color: #1a73e8;
+}
+
+/* light blue gradient nav bar */
+.siteNav,
+#root > nav:first-child,
+#root > header:first-child{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 110 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  padding: 12px 20px !important;
+
+  background: linear-gradient(180deg, #eff5ff 0%, #e6f0ff 55%, #eaf4ff 100%) !important;
+  border-bottom: 1px solid #d9e7ff !important;
+  box-shadow: 0 8px 24px rgba(26,115,232,.12) !important;
+
+  backdrop-filter: saturate(140%) blur(6px);
+  -webkit-backdrop-filter: saturate(140%) blur(6px);
+}
+
+/* small blue highlight line */
+.siteNav::after,
+#root > nav:first-child::after,
+#root > header:first-child::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(26,115,232,.25), rgba(99,102,241,.18));
+  pointer-events: none;
+}
+
+/* nav links on blue bar */
+.siteNav a,
+#root > nav:first-child a,
+#root > header:first-child a{
+  color: #1f2a44 !important;
+  font-weight: 600 !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  text-decoration: none !important;
+}
+.siteNav a:hover,
+#root > nav:first-child a:hover,
+#root > header:first-child a:hover{
+  background: rgba(255,255,255,.65) !important;
+  box-shadow: inset 0 0 0 1px #dbe6ff !important;
+  color: #1a73e8 !important;
+}
+
+/* keep the logout button tidy on the bar */
+.siteNav .btn, .siteNav button,
+#root > nav:first-child .btn, #root > nav:first-child button{
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+}
+
+/* ==== make the dashboard fit your screen nicely ==== */
+
+/* never let the page create a sideways scroll */
+html, body { overflow-x: hidden; }
+
+/* responsive width for the main dashboard panel */
+#root > div:has(> h2 + p + label + input[type="date"]){
+  width: clamp(720px, 92vw, 1080px);   /* grows up to 1080px, else uses 92 percent of the viewport */
+  max-width: 100%;
+  margin: 18px auto;
+  padding: clamp(14px, 2.6vw, 22px);
+  border-radius: 20px;
+}
+
+/* scale headings and text so it feels right on any screen */
+#root > div:has(> h2 + p + label + input[type="date"]) > h2{
+  font-size: clamp(22px, 2.6vw, 28px);
+  line-height: 1.2;
+}
+#root > div:has(> h2 + p + label + input[type="date"]) p,
+#root > div:has(> h2 + p + label + input[type="date"]) label{
+  font-size: clamp(14px, 1.6vw, 16px);
+}
+
+/* inputs, buttons and textareas scale down a little on smaller screens */
+#root > div:has(> h2 + p + label + input[type="date"]) input[type="date"],
+#root > div:has(> h2 + p + label + input[type="date"]) textarea,
+#root > div:has(> h2 + p + label + input[type="date"]) button{
+  font-size: clamp(14px, 1.6vw, 16px);
+  padding: clamp(10px, 1.2vw, 12px) clamp(12px, 1.6vw, 14px);
+}
+
+/* card spacing a bit tighter so more fits on the screen */
+#root > div:has(> h2 + p + label + input[type="date"]) h3 + div{
+  gap: clamp(10px, 1.6vw, 14px);
+}
+#root > div:has(> h2 + p + label + input[type="date"]) h3{
+  margin: 16px 0 8px;
+}
+
+/* keep the blue nav comfy on any width */
+.siteNav{
+  padding: 10px clamp(14px, 3vw, 22px) !important;
+}
+.siteNav a{
+  font-size: clamp(14px, 1.6vw, 16px) !important;
+  padding: 8px clamp(8px, 1.6vw, 12px) !important;
+}
+
+/* optional: if you still see a bottom horizontal bar, enforce this */
+#root{ max-width: 100vw; }
+
+/* keep the nav bar sized and centered */
+.siteNav{
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  min-height: 56px !important;
+  padding: 10px 24px !important;   /* extra right padding so it never hugs the edge */
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+/* push the last item in the bar to the right = Logout */
+.siteNav > *:last-child{
+  margin-left: auto !important;
+}
+
+/* make sure the logout is not absolutely positioned */
+.siteNav > button,
+.siteNav > .btn{
+  position: static !important;
+  white-space: nowrap;
+}
+
+/* if your logout is an <a> link instead of a button */
+.siteNav > a:last-child{
+  margin-left: auto !important;
+  position: static !important;
+  white-space: nowrap;
+}
+
+/* prevent any horizontal scroll that could hide it */
+html, body{ overflow-x: hidden; }
+
+/* small screens: allow wrapping and keep logout visible */
+@media (max-width: 640px){
+  .siteNav{ flex-wrap: wrap; }
+  .siteNav > *:last-child{
+    margin-left: 0 !important;
+    margin-top: 6px;
+  }
+}
+
+/* keep the nav bar sized and centered */
+.siteNav{
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  min-height: 56px !important;
+  padding: 10px 24px !important;   /* extra right padding so it never hugs the edge */
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+/* push the last item in the bar to the right = Logout */
+.siteNav > *:last-child{
+  margin-left: auto !important;
+}
+
+/* make sure the logout is not absolutely positioned */
+.siteNav > button,
+.siteNav > .btn{
+  position: static !important;
+  white-space: nowrap;
+}
+
+/* if your logout is an <a> link instead of a button */
+.siteNav > a:last-child{
+  margin-left: auto !important;
+  position: static !important;
+  white-space: nowrap;
+}
+
+/* prevent any horizontal scroll that could hide it */
+html, body{ overflow-x: hidden; }
+
+/* small screens: allow wrapping and keep logout visible */
+@media (max-width: 640px){
+  .siteNav{ flex-wrap: wrap; }
+  .siteNav > *:last-child{
+    margin-left: 0 !important;
+    margin-top: 6px;
+  }
+}
+
+/* --- keep the top bar full-width and padded --- */
+.siteNav{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 110 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  width: 100% !important;
+  min-height: 56px !important;
+  padding: 10px clamp(16px, 4vw, 32px) !important;  /* adds right room */
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* --- make the last item in the bar align right (Logout) --- */
+.siteNav > :last-child{
+  margin-left: auto !important;
+}
+
+/* --- if Logout is in the bar but absolutely/fixed positioned, neutralize it --- */
+.siteNav :is(.logout, .btnLogout, [id*="logout"], [name="logout"], [aria-label="Logout"], a[href*="logout"], button){
+  position: static !important;
+  right: auto !important; left: auto !important; top: auto !important;
+  transform: none !important;
+  white-space: nowrap !important;
+}
+
+/* --- if Logout was rendered OUTSIDE the nav, pin it neatly to the bar’s edge --- */
+:is(.logout, .btnLogout, [id*="logout"], [name="logout"], [aria-label="Logout"], a[href*="logout"]) {
+  position: fixed !important;
+  top: 10px !important;                        /* same height as nav */
+  right: clamp(12px, 3vw, 24px) !important;    /* safe distance from edge */
+  z-index: 120 !important;
+}
+.siteNav :is(.logout, .btnLogout, [id*="logout"], [name="logout"], [aria-label="Logout"], a[href*="logout"]) {
+  position: static !important;                 /* if it IS inside .siteNav, use flex alignment */
+}
+
+/* avoid any sideways scrolling that could hide it */
+html, body, #root{ max-width: 100vw; overflow-x: hidden; }
+
+/* ===== Force login headings to black (override earlier white hero rules) ===== */
+
+/* user + admin login pages (we detect the common layout: <h2> + form) */
+#root > div:has(> h2 + form) > h2 {
+  color: #0f172a !important;                 /* black/dark */
+  -webkit-text-fill-color: #0f172a !important;
+  text-shadow: none !important;
+}
+
+/* if you're using the pseudo headings we added earlier, make those black too */
+#root > div:has(form input[placeholder="email"]) > h2::after,
+#root > div:has(form input[placeholder="admin email"]) > h2::after {
+  color: #0f172a !important;
+  text-shadow: none !important;
+}
+
+/* keep hero cards white titles without affecting login pages */
+.card.hero h1,
+.card.hero h2 {
+  color: #f5f9ff !important;
+}
+
+/* brand area */
+.siteNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* brand on left, links center, actions right */
+  gap: 16px;
+}
+
+/* brand link */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 12px;
+}
+.brand:hover { background: rgba(255,255,255,.10); text-decoration: none; }
+
+/* logo image */
+.brand img {
+  width: 300px;
+  height: 300px;
+  display: block;
+  border-radius: 1000px;
+}
+
+/* app name */
+.brandName {
+  font-weight: 700;
+  letter-spacing: .2px;
+  color: #0f172a;                  /* dark on light nav */
+}
+
+/* keep links grouped in the middle */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0 auto;                  /* centers the links block */
+}
+
+/* brand on the left */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-right:auto;      /* pushes the links to the right */
+}
+.brand img{
+  width:100px;
+  height:100px;
+  border-radius:80px;      /* optional rounded corners */
+  object-fit:contain;
+  user-select:none;
+  -webkit-user-drag:none;
+  cursor:default;         /* not clickable look */
+}
+.brandName{
+  font-weight:700;
+  color:var(--ink);
+  letter-spacing:.2px;
+}
+
+/* --- Brand in the top bar --- */
+.siteNav .brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-right:16px;
+}
+
+.siteNav .brand img{
+  width:44px;                 /* controls size; match App.jsx */
+  height:44px;
+  object-fit:contain;
+  pointer-events:none;        /* ensure not clickable */
+  user-select:none;
+}
+
+.siteNav .brandName{
+  font-weight:700;
+  font-size:18px;
+  color:#0f172a !important;   /* force black text */
+  letter-spacing:.2px;
+  line-height:1;
+}
+
+/* =========================
+   Top Nav (matches App.jsx)
+   ========================= */
+
+:root{
+  --nav-bg1: #e9f2ff;
+  --nav-bg2: #dfeafe;
+  --ink: #0f172a;          /* dark text */
+  --muted: #6b7280;
+  --line: #e6ecfb;
+  --brand: #2563eb;        /* primary blue */
+  --brand-2: #3b82f6;      /* lighter blue */
+}
+
+/* Bar container */
+.siteNav{
+  position: sticky;
+  top: 0;
+  z-index: 40;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 10px 16px;
+  background: linear-gradient(180deg, var(--nav-bg1), var(--nav-bg2));
+  border-bottom: 1px solid #e9eefb;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, .06);
+  backdrop-filter: saturate(140%) blur(6px);
+}
+
+/* Brand block */
+.siteNav .brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Big non-clickable logo */
+.siteNav .brandLogo{
+  height: auto;       /* bump to 56px or 64px if you want it even larger */
+  width: auto;
+  pointer-events: none;   /* not clickable */
+  user-select: none;
+}
+
+/* Brand text: force black */
+.siteNav .brandName{
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: .2px;
+  white-space: nowrap;
+}
+
+/* Links area */
+.siteNav a{
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: background .18s ease, color .18s ease, transform .12s ease;
+}
+
+.siteNav a:hover{
+  background: rgba(15,23,42,.06);
+  transform: translateY(-1px);
+}
+
+/* Logout button (right side) */
+.siteNav button{
+  color: #fff;
+  background: linear-gradient(180deg, var(--brand-2), var(--brand));
+  border: 1px solid transparent;
+  padding: 8px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(37,99,235,.18);
+  transition: filter .15s ease, transform .12s ease, box-shadow .2s ease;
+}
+.siteNav button:hover{
+  filter: brightness(.98);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(37,99,235,.22);
+}
+
+/* Responsive tweak: shrink brand text if tight */
+@media (max-width: 720px){
+  .siteNav .brandName{
+    font-size: 15px;
+  }
+  .siteNav .brandLogo{
+    height: 42px;
+  }
+}
+
+/* Optional: make nav links pill-highlight for current page if you switch to NavLink later
+.siteNav a.active{
+  background: rgba(15,23,42,.08);
+}
+*/
+
+/* -------- Atlassian-like login layout -------- */
+
+.authWrap{
+  min-height: calc(100vh - 72px);          /* below your top nav */
+  display: grid;
+  place-items: start center;
+  padding: 48px 16px 72px;
+  background:
+    radial-gradient(700px 400px at 15% 10%, rgba(59,130,246,.08), transparent 60%),
+    radial-gradient(900px 520px at 85% 0%, rgba(37,99,235,.10), transparent 60%),
+    #f6f9ff;
+}
+
+.authCard{
+  width: min(420px, 92vw);
+  background: #fff;
+  border: 1px solid #e8ecf6;
+  border-radius: 14px;
+  padding: 28px 24px 24px;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, .08);
+}
+
+.authBrand{
+  display: block;
+  width: 42px;
+  height: 42px;
+  margin: 2px auto 10px;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.authTitle{
+  margin: 2px 0 6px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.authSubtitle{
+  margin: 0 0 14px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.authForm{ display: grid; gap: 12px; }
+
+/* Field with left icon and optional right eye button */
+.field{
+  position: relative;
+  display: block;
+}
+.field input{
+  width: 100%;
+  height: 44px;
+  padding: 0 44px 0 42px;       /* room for icons */
+  border: 1.5px solid #dfe6f6;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  outline: none;
+  transition: box-shadow .15s, border-color .15s;
+}
+.field input::placeholder{ color:#94a3b8; }
+.field input:focus{
+  border-color: #a9c7ff;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.18);
+}
+.fieldIcon{
+  position: absolute;
+  inset: 0 auto 0 12px;
+  width: 18px; height: 18px;
+  display: grid; place-items: center;
+  margin: auto 0;
+  pointer-events: none;
+}
+.pwToggle{
+  position: absolute;
+  right: 10px; top: 0; bottom: 0;
+  margin: auto 0;
+  height: 32px; width: 36px;
+  display: grid; place-items: center;
+  border: 0; background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.pwToggle:hover{ background: #f1f5ff; }
+
+.authLinks{
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 2px;
+}
+.authLinks a{
+  color: #2563eb;
+  font-size: 13px;
+  text-decoration: none;
+}
+.authLinks a:hover{ text-decoration: underline; }
+
+.authSubmit{
+  margin-top: 6px;
+  height: 46px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  background: linear-gradient(180deg, #4f8bff, #2563eb);
+  box-shadow: 0 8px 22px rgba(37,99,235,.25);
+  cursor: pointer;
+  transition: transform .1s, box-shadow .2s, filter .2s;
+}
+.authSubmit:hover{ transform: translateY(-1px); filter: brightness(.98); }
+.authSubmit:disabled{ opacity:.7; cursor:not-allowed; transform:none; box-shadow:none; }
+
+/* Optional: make top nav simpler on login pages */
+body:has(.authWrap) .siteNav{
+  background: linear-gradient(180deg, #f7faff, #eef4ff);
+  border-bottom: 1px solid #e6ecfb;
+}
+
+/* ===== Admin Login (purple hero + centered card) ===== */
+
+.adminLoginPage{
+  --heroStart:#7b2cff;         /* top gradient color */
+  --heroEnd:#6e35f1;           /* bottom gradient color */
+  --purple:#6f2df6;
+  --purple-2:#8a49ff;
+  --ink:#0f172a;
+  --muted:#7b86a8;
+  --line:#e9edfb;
+  --shadow:0 24px 60px rgba(15,23,42,.12);
+  background:
+    repeating-linear-gradient(0deg, #f9fbff 0 22px, #f9fbff 22px, #f3f7ff 22.5px 22.5px);
+  min-height: calc(100vh - 0px);
+}
+
+/* Top hero with curved bottom */
+.adminHero{
+  position: relative;
+  background: linear-gradient(180deg, var(--heroStart), var(--heroEnd));
+  color: #fff;
+  padding: 26px 16px 90px;
+  text-align: center;
+  overflow: hidden;
+}
+.adminHeroInner h1{
+  margin: 8px 0 0;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+.wave{ display:inline-block; transform: translateY(-2px); }
+
+.heroCurve{
+  position:absolute; left:0; right:0; bottom:-44px; height:88px;
+  background: #fff;
+  border-top-left-radius: 100% 80px;
+  border-top-right-radius: 100% 80px;
+}
+
+/* Content row: card + illustration */
+.adminLoginWrap{
+  max-width: 980px;
+  margin: -70px auto 56px;
+  padding: 0 18px;
+  display: grid;
+  grid-template-columns: minmax(300px, 520px) 1fr;
+  gap: 24px;
+  align-items: end;
+}
+
+/* Card */
+.adminCard{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow: var(--shadow);
+  padding: 22px 22px 24px;
+}
+.adminCardTitle{
+  text-align:center;
+  margin: 4px 0 6px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.adminCardSub{
+  text-align:center;
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Form fields */
+.adminForm{ display:grid; gap:12px; }
+.adminField{
+  position: relative;
+  display: block;
+}
+.adminField input{
+  width:100%;
+  height:44px;
+  padding: 0 44px 0 42px;
+  border:1.5px solid #e6ebfb;
+  border-radius:8px;
+  background:#fff;
+  color: var(--ink);
+  outline:none;
+  transition:border-color .15s, box-shadow .15s;
+}
+.adminField input::placeholder{ color:#9aa3b2; }
+.adminField input:focus{
+  border-color:#cbd7ff;
+  box-shadow:0 0 0 3px rgba(111,45,246,.18);
+}
+.leftIcon{
+  position:absolute; left:12px; top:0; bottom:0; margin:auto 0;
+  width:18px; height:18px; display:grid; place-items:center; pointer-events:none;
+}
+.rightIconBtn{
+  position:absolute; right:10px; top:0; bottom:0; margin:auto 0;
+  width:36px; height:32px; display:grid; place-items:center;
+  background:transparent; border:0; border-radius:6px; cursor:pointer;
+}
+.rightIconBtn:hover{ background:#f2f5ff; }
+
+/* Remember & forgot row */
+.formRow{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top: -2px;
+}
+.rememberMe{ display:flex; align-items:center; gap:8px; color:#5d6b89; font-size:13px; }
+.rememberMe input{ accent-color: var(--purple); }
+.forgot{ color: var(--purple); text-decoration:none; font-size:13px; }
+.forgot:hover{ text-decoration:underline; }
+
+/* Submit button */
+.adminSubmit{
+  margin-top: 6px;
+  height:46px;
+  border:0; border-radius:10px;
+  color:#fff; font-weight:700; letter-spacing:.2px;
+  background: linear-gradient(180deg, var(--purple-2), var(--purple));
+  box-shadow: 0 10px 28px rgba(111,45,246,.28);
+  cursor:pointer;
+  transition: transform .1s, filter .2s, box-shadow .2s;
+}
+.adminSubmit:hover{ transform: translateY(-1px); filter:brightness(.98); }
+.adminSubmit:disabled{ opacity:.7; cursor:not-allowed; transform:none; box-shadow:none; }
+
+/* Illustration on the right (optional asset at /public/admin-illustration.png) */
+.adminSideIllustration{
+  width: 360px; max-width: 100%;
+  justify-self: center;
+  transform: translateY(30px);
+  filter: drop-shadow(0 18px 25px rgba(0,0,0,.12));
+}
+
+/* Responsive */
+@media (max-width: 960px){
+  .adminLoginWrap{
+    grid-template-columns: 1fr;
+    margin-top: -60px;
+  }
+  .adminSideIllustration{ display:none; }
+}
+
+/* --- Admin login alignment fix --- */
+
+/* Default: single column, card centered */
+.adminLoginWrap{
+  max-width: 560px;
+  margin: -68px auto 56px;   /* pulls card into the purple hero curve */
+  padding: 0 18px;
+  display: block;            /* collapse grid -> single column */
+}
+.adminCard{
+  margin: 0 auto;            /* ensure the card is centered */
+}
+.adminSideIllustration{
+  display: none;             /* hide illustration by default */
+}
+
+/* Large screens: show optional art and use two columns */
+@media (min-width: 1200px){
+  .adminLoginWrap{
+    display: grid;
+    grid-template-columns: minmax(340px, 560px) 440px; /* card + art */
+    gap: 28px;
+    align-items: end;
+    justify-content: center;
+    max-width: 1120px;
+  }
+  .adminSideIllustration{
+    display: block;
+    width: 420px;
+    max-width: 100%;
+    justify-self: center;
+    transform: translateY(30px);
+    filter: drop-shadow(0 18px 25px rgba(0,0,0,.12));
+  }
+}
+
+/* Slightly rounder, centered hero curve so it doesn't feel off */
+.heroCurve{
+  position: absolute;
+  left: 0; right: 0; bottom: -46px; height: 92px;
+  background: #fff;
+  border-top-left-radius: 100% 70px;
+  border-top-right-radius: 100% 70px;
+}
+
+/* -----------------------------------
+   ADMIN LOGIN – clean center layout
+   Keep hero and card separate
+----------------------------------- */
+
+/* Hero */
+.heroSection{
+  position: relative;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(135deg, #6c3cf0, #6a35ff);
+  padding: 48px 16px 120px;           /* extra bottom padding for the curve */
+  overflow: hidden;
+}
+
+/* Decorative white curve under hero */
+.heroCurve{
+  position: absolute;
+  left: -6vw; right: -6vw;
+  bottom: 0;
+  height: 110px;
+  background: #fff;
+  border-top-left-radius: 100% 80px;
+  border-top-right-radius: 100% 80px;
+  pointer-events: none;
+  z-index: 0;                          /* stays behind everything below */
+}
+
+/* Everything after hero sits ABOVE the curve */
+.adminAfterHero{
+  position: relative;
+  z-index: 1;
+}
+
+/* Center the login card, no overlap with hero */
+.adminLoginWrap{
+  max-width: 560px;
+  margin: 32px auto 72px !important;   /* kill previous negative margin */
+  padding: 0 18px;
+  display: block;                      /* single column by default */
+}
+
+/* The card itself */
+.adminCard{
+  margin: 0 auto;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #e9edfb;
+  box-shadow: 0 24px 60px rgba(2,6,23,.12);
+}
+
+/* Optional right-side illustration is hidden by default */
+.adminSideIllustration{ display: none; }
+
+/* On very wide screens, you can show an illustration
+   and switch to a neat two-column layout */
+@media (min-width: 1200px){
+  .adminLoginWrap{
+    max-width: 1120px;
+    display: grid;
+    grid-template-columns: minmax(340px, 560px) 440px;  /* card + art */
+    gap: 28px;
+    align-items: start;
+    justify-content: center;
+  }
+  .adminSideIllustration{
+    display: block;
+    width: 420px;
+    max-width: 100%;
+    justify-self: center;
+    filter: drop-shadow(0 18px 25px rgba(0,0,0,.12));
+  }
+}
+
+/* Inputs & small UI alignment polish (optional) */
+.adminForm .inlineRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.adminForm .remember{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  font-size: 14px;
+}
+.adminForm .forgot{
+  color: #6a35ff;
+  font-weight: 600;
+  text-decoration: none;
+}
+.adminForm .forgot:hover{ text-decoration: underline; }
+
+/* ================================
+   ADMIN LOGIN – polished layout
+   (card does not slide under hero)
+=================================== */
+
+:root{
+  --violet: #6a35ff;
+  --violet-2: #7a4cff;
+  --ink: #0f172a;
+  --muted: #667085;
+  --line: #e9edfb;
+  --panel: #ffffff;
+  --shadow-lg: 0 28px 60px rgba(2,6,23,.14);
+  --shadow: 0 14px 40px rgba(2,6,23,.10);
+}
+
+/* Hero */
+.adminHero{
+  background: linear-gradient(135deg, var(--violet), var(--violet-2));
+  color:#fff;
+  padding: 56px 16px 64px;
+  text-align:center;
+}
+.adminHero__inner{ max-width: 960px; margin: 0 auto; }
+.adminHero__title{
+  margin:0;
+  font-size: clamp(26px, 3.5vw, 38px);
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+.adminHero__sub{
+  margin: 10px 0 0;
+  opacity: .92;
+  font-size: 15px;
+}
+
+/* Main area (separate from hero) */
+.adminMain{
+  background:
+    radial-gradient(900px 520px at 90% 0%, rgba(59,130,246,.08), transparent 60%),
+    radial-gradient(900px 620px at 0% -20%, rgba(37,99,235,.08), transparent 60%),
+    #f7f9ff;
+  padding: 36px 16px 88px;
+}
+
+/* Card */
+.adminCard{
+  width: min(560px, 96%);
+  margin: 0 auto;                  /* clean separation from hero */
+  padding: 22px 22px 26px;
+  border-radius: 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+}
+.adminCard__title{
+  margin: 4px 0 4px;
+  font-size: 28px;
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: .2px;
+  text-align: left;
+}
+.adminCard__hint{
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Form */
+.adminForm{ display: grid; gap: 14px; }
+
+/* Input group with icons */
+.field{
+  position: relative;
+}
+.input{
+  width: 100%;
+  height: 46px;
+  padding: 10px 44px 10px 44px;    /* room for icons */
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #f7f9ff;
+  color: var(--ink);
+  outline: none;
+  transition: box-shadow .2s, border-color .2s, background .2s;
+}
+.input:focus{
+  background: #fff;
+  border-color: #cfe0ff;
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+}
+
+/* Icons */
+.iconLeft,
+.iconRight{
+  position: absolute;
+  top: 0; bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  color: #6b7280;
+}
+.iconLeft{ left: 2px; pointer-events: none; }
+.iconRight{
+  right: 2px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.iconRight:hover{ background: rgba(15,23,42,.04); }
+
+/* remember + forgot */
+.rowBetween{
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+}
+.remember{
+  display: inline-flex; align-items: center; gap: 8px;
+  color: #475569; font-size: 14px;
+}
+.link{
+  color: var(--violet);
+  font-weight: 600;
+  text-decoration: none;
+}
+.link:hover{ text-decoration: underline; }
+
+/* Button */
+.adminBtn{
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(180deg, #3b82f6, #2563eb);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: filter .2s, transform .16s, box-shadow .2s;
+}
+.adminBtn:hover{ filter: brightness(.98); transform: translateY(-1px); }
+.adminBtn:disabled{ opacity: .65; cursor: not-allowed; transform: none; }
+
+/* Small screens */
+@media (max-width: 420px){
+  .adminHero{ padding: 44px 12px 52px; }
+  .adminCard{ padding: 18px 16px 22px; }
+  .adminCard__title{ font-size: 24px; }
+}
+
+/* ====== Professional Admin Login (floating labels + gradient border) ====== */
+
+:root{
+  --brand: #2563eb;
+  --brand-2: #3b82f6;
+  --violet: #3b82f6;
+  --violet-2: #3b82f6;
+
+  --ink:#0f172a;
+  --muted:#ffffff;
+  --panel:#ffffff;
+  --line:#e9edfb;
+
+  --shadow: 0 14px 40px rgba(2,6,23,.10);
+  --shadow-lg: 0 28px 80px rgba(2,6,23,.16);
+}
+
+/* HERO (tighter, bolder, softer radius at bottom) */
+.adminHero.pro{
+  background: radial-gradient(1200px 300px at 50% -40%, rgba(255,255,255,.08), transparent),
+              linear-gradient(135deg, var(--violet), var(--violet-2));
+  color:#fff; text-align:center;
+  padding: 56px 16px 72px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+.adminHero__inner{ max-width:1000px; margin:0 auto; }
+.adminHero__title{ margin:0; font-size: clamp(28px, 3.4vw, 40px); font-weight: 900; letter-spacing:.2px; }
+.adminHero__sub{ margin:10px 0 0; opacity:.92; }
+
+/* MAIN background with soft “aurora” lights */
+.adminMain.pro{
+  background:
+    radial-gradient(700px 400px at 10% -10%, rgba(37,99,235,.08), transparent 60%),
+    radial-gradient(900px 500px at 90% -20%, rgba(139,92,246,.10), transparent 60%),
+    #f7f9ff;
+  padding: 36px 16px 96px;
+}
+
+/* CARD with gradient border + glassy look */
+.adminCard.pro{
+  width: min(560px, 94%);
+  margin: 0 auto;
+  position: relative;
+  padding: 22px 22px 26px;
+  background: rgba(255,255,255,.9);
+  backdrop-filter: saturate(160%) blur(6px);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid transparent;
+}
+.adminCard.pro::before{
+  content:"";
+  position:absolute; inset:0; border-radius:18px; padding:1px;
+  background: linear-gradient(180deg, rgba(139,92,246,.45), rgba(37,99,235,.45));
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box,
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events:none;
+}
+.adminCard__head{ display:flex; align-items:flex-start; gap:12px; margin-bottom:8px; }
+.adminCard__title{ margin:0; font-size:26px; font-weight:900; color:var(--ink); letter-spacing:.2px; }
+.adminCard__hint{ margin:4px 0 0; color:var(--muted); }
+.dot{ width:10px; height:10px; border-radius:50%; background:linear-gradient(180deg, #a78bfa, #60a5fa); margin-top:10px; }
+
+/* FORM layout */
+.adminForm{ display:grid; gap:16px; }
+
+/* FLOATING LABEL FIELDS */
+.field{ position:relative; }
+.input{
+  width:100%; height:48px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:#f7f9ff;
+  color:var(--ink);
+  padding:12px 48px 12px 48px; /* icon space both sides */
+  transition:border-color .2s, box-shadow .2s, background .2s;
+  outline:none;
+}
+.input:focus{
+  background:#fff;
+  border-color:#cfe0ff;
+  box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+
+/* floating label */
+.field--float .input--float::-webkit-input-placeholder { color: transparent; }
+.field--float .input--float::placeholder{ color: transparent; }
+.field--float label{
+  position:absolute; left:48px; top:50%;
+  transform: translateY(-50%);
+  color:#94a3b8; font-size:14px;
+  pointer-events:none; transition: all .18s ease;
+}
+.field--float .input--float:not(:placeholder-shown) + label,
+.field--float .input--float:focus + label{
+  top:6px; transform:none;
+  font-size:11px; color:#566179; background:#fff; padding:0 6px; border-radius:6px;
+}
+
+/* Icons inside input */
+.iconLeft, .iconRight{
+  position:absolute; top:0; bottom:0; width:44px;
+  display:inline-flex; align-items:center; justify-content:center;
+  color:#6b7280;
+}
+.iconLeft{ left:0; pointer-events:none; }
+.iconRight{
+  right:0; border:none; background:transparent; cursor:pointer; border-radius:12px;
+}
+.iconRight:hover{ background: rgba(15,23,42,.05); }
+
+/* Options row */
+.rowBetween{ display:flex; justify-content:space-between; align-items:center; margin-top:4px; }
+.remember{ display:inline-flex; align-items:center; gap:8px; color:#475569; font-size:14px; }
+.link{ color:var(--violet); text-decoration:none; font-weight:700; }
+.link:hover{ text-decoration:underline; }
+
+/* Primary action */
+.adminBtn.pro{
+  height:48px; border-radius:14px; border:1px solid transparent;
+  color:#fff; font-weight:800; letter-spacing:.2px;
+  background: linear-gradient(180deg, var(--brand-2), var(--brand));
+  box-shadow: var(--shadow);
+  transition: transform .16s ease, filter .2s ease, box-shadow .2s ease;
+}
+.adminBtn.pro:hover{ transform: translateY(-1px); filter:brightness(.98); box-shadow: 0 18px 50px rgba(37,99,235,.20); }
+.adminBtn.pro:disabled{ opacity:.65; transform:none; }
+
+/* Small screens */
+@media (max-width: 420px){
+  .adminHero.pro{ padding: 46px 12px 60px; }
+  .adminCard.pro{ padding:18px 16px 22px; }
+  .adminCard__title{ font-size:22px; }
+  .input{ height:46px; }
+}
+
+/* === Admin login card: make it a little bigger === */
+.adminCard.pro{
+  width: min(680px, 96%);           /* was min(560px, 94%) */
+  padding: 28px 28px 32px;          /* a bit more breathing room */
+}
+
+.adminCard__title{                  /* slightly larger title */
+  font-size: 28px;
+}
+
+.adminForm{ gap: 18px; }            /* more vertical spacing */
+
+/* Inputs a bit taller & wider inside spacing */
+.input{
+  height: 54px;                     /* was 48px */
+  border-radius: 16px;
+  padding: 14px 56px 14px 56px;     /* keep icons + label balanced */
+  font-size: 15.5px;
+}
+
+/* Icon hit areas widened to match new padding */
+.iconLeft, .iconRight{ width: 52px; }
+
+/* Floating label anchor position matches new left padding */
+.field--float label{
+  left: 56px;                       /* was 48px */
+}
+
+/* Primary button to match input height */
+.adminBtn.pro{
+  height: 54px;                     /* was 48px */
+  font-size: 15.5px;
+}
+/* =========================
+   Glowing blue hero (admin)
+   ========================= */
+.adminHero{
+  position: relative;
+  overflow: hidden;
+
+  /* layered gradients = glow */
+  background:
+    /* left & right glows */
+    radial-gradient(680px 280px at 0% 25%, rgba(106, 165, 255, .35), transparent 60%),
+    radial-gradient(680px 280px at 100% 25%, rgba(106, 165, 255, .35), transparent 60%),
+
+    /* top halo */
+    radial-gradient(1200px 420px at 50% -10%, rgba(255,255,255,.30), transparent 65%),
+
+    /* main animated blue gradient */
+    linear-gradient(135deg, #5aa0ff 0%, #3f86ff 35%, #2b6ef5 65%, #2563eb 100%);
+  
+  /* animate the main gradient for a subtle shimmer */
+  background-size: auto, auto, auto, 160% 160%;
+  animation: adminHeroMove 18s ease-in-out infinite;
+
+  /* polish */
+  box-shadow: inset 0 -18px 40px rgba(0,0,0,.06), 0 30px 120px rgba(37,99,235,.20);
+}
+
+/* extra glow sheen across the top edge */
+.adminHero::after{
+  content:"";
+  position:absolute; left:0; right:0; top:0; height:55%;
+  background: radial-gradient(600px 180px at 50% -40px, rgba(255,255,255,.35), transparent 70%);
+  pointer-events:none;
+  mix-blend-mode: screen;
+}
+
+@keyframes adminHeroMove{
+  0%   { background-position: 0 0, 0 0, 0 0, 0% 0%; }
+  50%  { background-position: 0 0, 0 0, 0 0, 100% 60%; }
+  100% { background-position: 0 0, 0 0, 0 0, 0% 100%; }
+}
+
+/* readability on top of the glow */
+.adminHero h1,
+.adminHero p{
+  color:#fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,.18);
+}
+
+/* =========================
+   Split login layout (image left, form right)
+   ========================= */
+.loginSplit{
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(460px, 560px);
+  min-height: 100vh;                 /* fills the screen */
+  background: radial-gradient(1200px 600px at 70% 0%, rgba(59,130,246,.08), transparent 60%),
+              #f7faff;
+}
+
+/* Left image panel */
+.loginImg{
+  background-image: url("/RF.jpg"); /* put your image here */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.loginImg::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient( to bottom right, rgba(2,6,23,.35), rgba(2,6,23,.05) );
+  pointer-events: none; /* non-interactive */
+}
+
+/* Right panel */
+.loginPanel{
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+}
+
+/* Card */
+.loginCard{
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border: 1px solid #e8edf6;
+  border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(2,6,23,.10);
+  padding: 26px 26px 28px;
+}
+
+.miniLogo{
+  width: 28px; height: 28px;
+  display: block; margin: 6px auto 10px;
+}
+
+.loginTitle{
+  text-align:center;
+  font-size: 28px; font-weight: 800;
+  margin: 4px 0 4px; letter-spacing: .2px;
+  color: #0f172a;
+}
+.loginSub{
+  text-align:center; margin: 0 0 14px; color: #6b7280;
+}
+
+/* Form */
+.loginForm{ display: grid; gap: 14px; }
+
+.inputWrap{
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  align-items: center;
+  background: #f7f9ff;
+  border: 1px solid #e6ecfb;
+  border-radius: 12px;
+  padding: 4px 6px;
+}
+.inputWrap .i.leading{
+  display: grid; place-items: center;
+  font-size: 14px; color: #64748b;
+}
+.inputWrap input{
+  border: none; outline: none;
+  background: transparent;
+  padding: 10px 12px;
+  font-size: 14px; color: #0f172a;
+}
+.inputWrap:focus-within{
+  border-color: #cfe0ff;
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+  background: #ffffff;
+}
+
+.formRow{
+  display: flex; justify-content: flex-end; margin-top: -6px;
+}
+.link{ color:#2563eb; text-decoration:none; font-weight:600; font-size:13px; }
+.link:hover{ text-decoration: underline; }
+
+/* Responsive: stack on small screens */
+@media (max-width: 1024px){
+  .loginSplit{ grid-template-columns: 1fr; }
+  .loginImg{ height: 38vh; }
+  .loginPanel{ padding-top: 16px; }
+}
+
+/* ===== User Login: 50/50 split ===== */
+.loginShell{
+  width: 100%;
+  /* make the section fill the screen below the navbar (adjust 72px to your navbar height) */
+  min-height: calc(100vh - 72px);
+  display: block;
+}
+
+.loginSplit{
+  display: grid;
+  grid-template-columns: 1fr 1fr;      /* EXACT half & half */
+  width: 100vw;                        /* stretch full width */
+  min-height: inherit;                 /* same height as .loginShell */
+}
+
+/* Left side: image */
+.loginArt{
+  position: relative;
+  overflow: hidden;
+}
+.loginArt img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                   /* image covers the half perfectly */
+  display: block;
+}
+
+/* Optional readability gradient over the image */
+.loginArt::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(90deg, rgba(2,6,23,.35), rgba(2,6,23,.12) 40%, transparent 70%);
+}
+
+/* Right side: center the card */
+.loginPanel{
+  display: grid;
+  place-items: center;
+  padding: clamp(24px, 4vw, 56px);
+  background:
+    radial-gradient(800px 480px at 60% 0%, rgba(59,130,246,.10), transparent 60%),
+    radial-gradient(900px 560px at 30% -10%, rgba(37,99,235,.08), transparent 65%);
+}
+
+/* The card itself */
+.loginCard{
+  width: min(560px, 88vw);
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid #e8edf6;
+  box-shadow: 0 20px 60px rgba(15,23,42,.10);
+  padding: 26px 26px 30px;
+}
+
+/* Inputs/rows inside the card (keep your existing styles if you have them) */
+.loginCard .inputRow{
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 900px){
+  .loginSplit{
+    grid-template-columns: 1fr;
+  }
+  .loginArt{ display: none; }          /* hide the big image on small devices */
+  .loginPanel{ padding-top: 32px; }
+}
+
+/* LEFT side image */
+.loginArt{
+  position: relative;
+  overflow: hidden;
+}
+.loginArt img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  /* Neutralize the original colors a bit so the tint looks clean */
+  filter: saturate(0) brightness(0.95);
+}
+
+/* Blue tint overlay */
+.loginArt::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
+  mix-blend-mode: multiply;   /* applies the tint over the photo */
+  opacity: 0.55;              /* strength of the tint — tweak 0.35–0.7 */
+  pointer-events: none;
+}
+
+/* Optional soft glow/lighting over the image (keep or remove) */
+.loginArt::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(900px 520px at 20% 0%, rgba(255,255,255,.18), transparent 60%);
+  pointer-events: none;
+}
+
+/* Tone down the tint in dark mode if you like */
+@media (prefers-color-scheme: dark){
+  .loginArt::before{ opacity: .40; }
+}
+
+/* fallback tint by shifting hues */
+.loginArt img{
+  filter: grayscale(1) sepia(.9) hue-rotate(185deg) saturate(240%) brightness(.88);
+}
+
+/* Left-half image panel */
+.loginArt{
+  position: relative;
+  isolation: isolate;            /* keep blend effects inside this box */
+  overflow: hidden;
+}
+
+/* The photo */
+.loginArt img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+
+  /* neutralize original tones so the blue reads clean */
+  filter: saturate(0) brightness(0.95);
+}
+
+/* Blue tint on top of the photo */
+.loginArt::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;                    /* make sure it’s above the image */
+  pointer-events: none;
+
+  /* the actual tint */
+  background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
+  mix-blend-mode: multiply;
+  opacity: 0.55;                 /* adjust 0.35–0.7 to taste */
+}
+
+/* Optional soft lighting */
+.loginArt::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(900px 520px at 20% 0%, rgba(255,255,255,.18), transparent 60%);
+}
+
+/* If you use dark mode and want a slightly lighter tint there */
+@media (prefers-color-scheme: dark){
+  .loginArt::after{ opacity: .40; }
+}
+
+/* Apply this to the same left column div and remove/hide the <img> inside it */
+.loginArt{
+  background:
+    linear-gradient(180deg, #60a5fa 0%, #2563eb 100%),
+    url("/RO.jpg") center/cover no-repeat;
+  background-blend-mode: multiply;  /* the tint */
+}
+.loginArt img{ display:none; }       /* if an <img> remains in the markup */
+
+/* ====== Brand colors (match the login art tint) ====== */
+:root{
+  --brand-900: #0b2b52;
+  --brand-800: #123c77;
+  --brand-700: #1e3a8a;  /* deep blue */
+  --brand-600: #2563eb;  /* mid blue */
+  --brand-400: #60a5fa;  /* soft blue */
+}
+
+/* ====== GLASS GRADIENT NAVBAR ====== */
+.siteNav{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  /* spacing */
+  padding: 14px 22px;
+
+  /* gradient that harmonizes with the tinted image */
+  background:
+    radial-gradient(900px 420px at 10% -40%, rgba(255,255,255,.65), transparent 60%),
+    linear-gradient(180deg,
+      rgba(30,58,138,.92) 0%,
+      rgba(37,99,235,.90) 55%,
+      rgba(96,165,250,.85) 100%
+    );
+
+  /* subtle glass feel */
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+
+  /* tidy edge + light drop shadow */
+  border-bottom: 1px solid rgba(13,53,120,.12);
+  box-shadow:
+    0 6px 24px rgba(28,78,216,.16),
+    inset 0 1px 0 rgba(255,255,255,.20);
+
+  /* readable ink on blue */
+  color: #0f172a; /* near-black */
+}
+
+/* Brand label (if you show it next to the logo) */
+.siteNav .brandName{
+  font-weight: 700;
+  letter-spacing: .2px;
+  color: #0f172a;
+}
+
+/* Links in the navbar */
+.siteNav a{
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+.siteNav a:hover{
+  color: #0b2b52;
+  background: rgba(255,255,255,.55);
+  box-shadow: 0 2px 10px rgba(30,64,175,.15);
+}
+
+/* Logout (or any nav button) */
+.siteNav button{
+  margin-left: auto;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 600;
+
+  color: white;
+  background: linear-gradient(180deg, #3b82f6, #2563eb);
+  box-shadow: 0 6px 18px rgba(37,99,235,.28);
+  transition: transform .06s ease, box-shadow .15s ease, filter .15s ease;
+}
+.siteNav button:hover{
+  filter: brightness(1.02);
+  box-shadow: 0 10px 24px rgba(37,99,235,.34);
+}
+.siteNav button:active{
+  transform: translateY(1px);
+}
+
+/* Optional: slightly lighter nav on dark-mode systems */
+@media (prefers-color-scheme: dark){
+  .siteNav{
+    background:
+      radial-gradient(900px 420px at 10% -40%, rgba(255,255,255,.55), transparent 60%),
+      linear-gradient(180deg,
+        rgba(30,58,138,.88) 0%,
+        rgba(37,99,235,.86) 55%,
+        rgba(96,165,250,.80) 100%
+      );
+  }
+}
+
+/* Optional: compact nav on small screens */
+@media (max-width: 640px){
+  .siteNav{
+    padding: 12px 14px;
+    gap: 12px;
+  }
+  .siteNav a{ padding: 6px 8px; }
+}
+
+
+:root{
+  /* tweak these to match your image tone exactly */
+  --nav-grad: linear-gradient(90deg,#17548b 0%, #2563eb 50%, #0ea5e9 100%);
+}
+
+/* Force the gradient + white foreground */
+.siteNav.navGradient{
+  background: var(--nav-grad) !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,.10);
+  color: #4052c4 !important;
+}
+
+.siteNav.navGradient .brandName{
+  color: #151515 !important;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.siteNav.navGradient .navLink{
+  color: #366cdf !important;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.siteNav.navGradient .navLogoutBtn{
+  background: rgba(43, 146, 190, 0.18) !important;
+  color: #0b488a !important;
+  border: 1px solid rgba(255,255,255,0.25) !important;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: saturate(140%) blur(2px);
+}
+
+:root{
+  /* Tune to match your image tones */
+  --nav-grad: linear-gradient(90deg,#17548b 0%, #2563eb 50%, #0ea5e9 100%);
+}
+
+/* Backup in case inline style is removed later */
+#topNav.navGradient{
+  background: var(--nav-grad) !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,.10);
+  color: #fff !important;
+}
+
+#topNav .navLink{
+  color: #fff !important;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+#topNav .navLogoutBtn{
+  background: rgba(255,255,255,.18) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: saturate(140%) blur(2px);
+}
+
+/* === FINAL NAVBAR COLOR OVERRIDE (paste at end of app.css) === */
+:root{
+  /* tweak these three to match your image exactly */
+  --nav-start: #17548b;   /* deep blue */
+  --nav-mid:   #2563eb;   /* primary blue */
+  --nav-end:   #0ea5e9;   /* cyan */
+}
+
+#topNav{
+  /* force the gradient + text color */
+  background: linear-gradient(90deg, var(--nav-start), var(--nav-mid) 50%, var(--nav-end)) !important;
+  color: #0f172a !important; /* dark text by default */
+  border-bottom: 1px solid rgba(13,53,120,.12) !important;
+  box-shadow: 0 6px 24px rgba(28,78,216,.16), inset 0 1px 0 rgba(255,255,255,.20) !important;
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+}
+
+/* brand text + logo sizing */
+#topNav .brandName{ color:#0f172a !important; font-weight:700; letter-spacing:.2px; }
+#topNav .brandLogo{ height:56px !important; width:auto !important; pointer-events:none; user-select:none; }
+
+/* links on the bar */
+#topNav a{
+  color:#0f172a !important;
+  text-decoration:none !important;
+  font-weight:600;
+  padding:6px 10px;
+  border-radius:8px;
+  transition: color .15s, background-color .15s, box-shadow .15s, transform .12s;
+}
+#topNav a:hover{
+  color:#0b2b52 !important;
+  background: rgba(255,255,255,.55) !important;
+  box-shadow: 0 2px 10px rgba(30,64,175,.15);
+  transform: translateY(-1px);
+}
+
+/* logout button on the right */
+#topNav .navLogoutBtn{
+  background: linear-gradient(180deg, #3b82f6, #2563eb) !important;
+  color:#fff !important;
+  border:0 !important;
+  padding:8px 14px;
+  border-radius:10px;
+  font-weight:700;
+  box-shadow: 0 6px 18px rgba(37,99,235,.28);
+}
+#topNav .navLogoutBtn:hover{
+  filter: brightness(1.02);
+  box-shadow: 0 10px 24px rgba(37,99,235,.34);
+  transform: translateY(-1px);
+}
