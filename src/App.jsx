@@ -19,7 +19,7 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 
 import { ProtectedRoute, AdminRoute } from "./ProtectedRoute";
-import "./app.css";
+import "./App.css";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
