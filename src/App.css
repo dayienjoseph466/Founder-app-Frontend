@@ -3957,3 +3957,12 @@ body{ color: var(--ink); background: var(--bg); }
   overflow-y: auto;    /* allow vertical scrolling */
   overflow-x: hidden;
 }
+
+/* Make dashboard pages scrollable */
+.dash,
+.adminDash {
+  height: 100vh;        /* lock to full screen height */
+  overflow-y: auto;     /* enable vertical scrolling */
+  overflow-x: hidden;   /* prevent sideways scroll */
+  padding-bottom: 40px; /* optional: breathing space */
+}
