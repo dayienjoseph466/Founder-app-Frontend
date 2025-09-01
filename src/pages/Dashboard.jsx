@@ -2,7 +2,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { API_URL } from "../api";
 import "../App.css";
-import ReviewsPanel from "../components/ReviewsPanel";
 
 function toYMD(d) {
   const y = d.getFullYear();
