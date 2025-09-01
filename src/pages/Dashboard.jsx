@@ -1,7 +1,7 @@
 // client/src/pages/Dashboard.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { API_URL } from "../api";
-import "./App.css";
+import "../App.css";
 
 function toYMD(d) {
   const y = d.getFullYear();
