@@ -3610,15 +3610,12 @@ html, body { overflow: hidden; }
   .footerLinks { flex-direction: column; align-items: center; }
 }
 
-/* Subtitle text under Welcome back */
-.subtitle,
-.loginFrame p {
-  color: #ffffff !important;   /* force white color */
+/* left side hero subtitle */
+.leftHero .leftSub {
+  color: #ffffff;
 }
 
-/* Only change the subtitle on the left blue side */
-.heroArt + p,
-.heroText,
-.leftHero p {
-  color: #ffffff !important;   /* pure white */
+/* right side card subtitle should stay black */
+.loginCard2 .subtitle {
+  color: #0f172a !important; /* deep black */
 }
