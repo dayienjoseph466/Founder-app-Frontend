@@ -3219,3 +3219,23 @@ body:has(.authWrap) .siteNav{
 .sIco{font-size:14px}
 
 .alLegal{margin:14px 0 2px;font-size:12px;color:#6b7a99;text-align:center}
+
+/* Keep page fixed (no vertical scroll) */
+.alPage.noScroll { min-height: 100vh; overflow: hidden; }
+
+/* Smaller, tighter card */
+.alCard.compact {
+  max-width: 420px;
+  padding: 18px 20px;
+  border-radius: 16px;
+}
+
+.alTitle.small { font-size: 28px; }
+
+/* Slightly tighter gaps so the card height stays short */
+.alForm { gap: 6px; }
+.alBadge { padding: 8px 10px; border-radius: 10px; }
+.alBtn.primary { margin-top: 6px; }
+
+/* Optional: reduce header padding a touch to avoid accidental overflow */
+.alTop { padding: 14px 18px; }

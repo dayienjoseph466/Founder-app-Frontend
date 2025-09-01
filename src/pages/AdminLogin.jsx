@@ -46,7 +46,7 @@ export default function AdminLogin() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("me", JSON.stringify({ ...data.admin, role: "ADMIN" }));
       if (!remember) {
-        // (optional) no-op: you could clear token on unload if you want
+        // optional: no-op
       }
       nav("/admin", { replace: true });
     } catch (err2) {
@@ -57,7 +57,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="alPage">
+    <div className="alPage noScroll">
       <header className="alTop">
         <div className="alBrand">
           <img src="/logo.png" alt="" className="alLogo" />
@@ -65,13 +65,13 @@ export default function AdminLogin() {
         </div>
         <nav className="alTopLinks">
           <a href="/" className="alTopLink">Back to site</a>
-          <a href="mailto:support@yourdomain.com" className="alTopLink">Help</a>
+          {/* Help removed as requested */}
         </nav>
       </header>
 
       <main className="alCenter">
-        <div className="alCard" role="group" aria-label="Admin login">
-          <h1 className="alTitle">Admin Login</h1>
+        <div className="alCard compact" role="group" aria-label="Admin login">
+          <h1 className="alTitle small">Admin Login</h1>
           <p className="alSubtitle">Please enter your credentials.</p>
 
           <form className="alForm" onSubmit={submit} noValidate>
@@ -144,26 +144,10 @@ export default function AdminLogin() {
               {loading ? "Logging in…" : "Login"}
             </button>
 
-            <div className="alOr">
-              <span className="line" />
-              <span className="txt">Or</span>
-              <span className="line" />
-            </div>
-
-            {/* Social placeholders (non-functional) */}
-            <div className="alSocial">
-              <button type="button" className="alBtn ghost" disabled title="Not enabled">
-                <span className="sIco">🟢</span> Continue with Google
-              </button>
-              <button type="button" className="alBtn ghost" disabled title="Not enabled">
-                <span className="sIco">🟦</span> Continue with Microsoft
-              </button>
-            </div>
-
-            <p className="alLegal">
-              By logging in, you agree to the <a href="#" className="alLink">Terms</a> and{" "}
-              <a href="#" className="alLink">Privacy</a>.
-            </p>
+            {/* Everything below the Login button is removed:
+                - OR divider
+                - Google/Microsoft buttons
+                - Legal footer */}
           </form>
         </div>
       </main>
