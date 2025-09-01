@@ -3172,3 +3172,50 @@ body:has(.authWrap) .siteNav{
 @media (max-width: 1024px){
   .dsMain{grid-template-columns:1fr}
 }
+
+/* ===== Admin Login (al*) ===== */
+.alPage{min-height:100vh;background:linear-gradient(180deg,#2f6bff 0%,#4a86ff 45%,#7aa5ff 100%);color:#0f172a;display:flex;flex-direction:column;}
+.alTop{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;color:#fff;}
+.alBrand{display:flex;gap:10px;align-items:center;font-weight:800;letter-spacing:.2px}
+.alLogo{height:28px;width:auto}
+.alTopLinks{display:flex;gap:18px}
+.alTopLink{color:#e8f0ff;text-decoration:none;font-weight:700}
+.alTopLink:hover{opacity:.9;text-decoration:underline}
+
+.alCenter{flex:1;display:grid;place-items:center;padding:24px}
+.alCard{width:100%;max-width:560px;background:#fff;border:1px solid #e6ebf5;border-radius:18px;padding:26px 26px 18px;box-shadow:0 10px 40px rgba(10,19,60,.20);}
+.alTitle{margin:6px 0 2px;font-size:34px;text-align:center}
+.alSubtitle{margin:0 0 18px;color:#6b7a99;text-align:center}
+.alForm{display:flex;flex-direction:column;gap:8px}
+
+.alLabel{font-weight:800;margin-top:6px}
+.alField{position:relative;display:flex;align-items:center;border:1px solid #dfe6fb;background:#f9fbff;border-radius:12px;padding:10px 12px;}
+.alField.hasError{border-color:#ffb5b5;background:#fff8f8}
+.alInput{flex:1;border:none;outline:none;background:transparent;font-size:15px}
+.alEye{position:absolute;right:10px;border:none;background:transparent;cursor:pointer;font-size:15px}
+
+.alBadge{display:flex;align-items:center;gap:8px;font-weight:700;padding:10px 12px;border-radius:12px;margin-top:2px;border:1px solid #e6ebf5;background:#f7faff;color:#37517e;}
+.alBadge .ico{opacity:.9}
+.alBadge.error{background:#ffecec;border-color:#ffd2d2;color:#b42318}
+.alBadge.ok{background:#ecfdf5;border-color:#c8f3e2;color:#0a7a55}
+.alBadge.note{background:#fffdf0;border-color:#f6e7b5;color:#916d00}
+
+.alRow{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.alRemember{display:flex;align-items:center;gap:8px}
+.alLink{color:#2f6bff;text-decoration:none;font-weight:700}
+.alLink:hover{text-decoration:underline}
+
+.alBtn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:12px;padding:12px 16px;border:1px solid #dfe6fb;font-weight:800;cursor:pointer;}
+.alBtn.primary{background:#2f6bff;border-color:#2f6bff;color:#fff;margin-top:6px;box-shadow:0 6px 16px rgba(47,107,255,.35);}
+.alBtn.primary:disabled{opacity:.7;cursor:default}
+.alBtn.ghost{background:#fff;color:#0f172a}
+.alBtn.ghost[disabled]{opacity:.6;cursor:not-allowed}
+
+.alOr{display:flex;align-items:center;gap:12px;color:#6b7a99;margin:10px 0}
+.alOr .line{flex:1;height:1px;background:#e6ebf5}
+.alOr .txt{font-weight:800}
+
+.alSocial{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sIco{font-size:14px}
+
+.alLegal{margin:14px 0 2px;font-size:12px;color:#6b7a99;text-align:center}

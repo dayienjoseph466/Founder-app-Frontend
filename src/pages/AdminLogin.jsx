@@ -1,5 +1,4 @@
-// client/src/pages/AdminLogin.jsx
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { API_URL } from "../api";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -9,15 +8,28 @@ export default function AdminLogin() {
   const [show, setShow] = useState(false);
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [emailError, setEmailError] = useState("");
+  const pwdLooksGood = useMemo(() => password.trim().length >= 6, [password]);
+
   const nav = useNavigate();
+
+  function validateEmailLike(v) {
+    const s = String(v || "").trim();
+    if (!s) return "Email or username is required";
+    const emailish = /\S+@\S+\.\S+/.test(s);
+    const usernameish = s.length >= 3;
+    return emailish || usernameish ? "" : "Invalid email or username";
+  }
 
   async function submit(e) {
     e.preventDefault();
-    if (!email || !password) return;
+    const err = validateEmailLike(email);
+    setEmailError(err);
+    if (err || !password) return;
 
     try {
       setLoading(true);
-      // use the admin endpoint
       const r = await fetch(`${API_URL}/api/admin/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -26,89 +38,95 @@ export default function AdminLogin() {
 
       if (!r.ok) {
         const t = await r.text().catch(() => "");
-        throw new Error(t || "Login failed");
+        setEmailError(/invalid/i.test(t) ? "Invalid email or username" : (t || "Login failed"));
+        return;
       }
 
       const data = await r.json(); // { token, admin: { id, name, email } }
       localStorage.setItem("token", data.token);
-      // store role so the navbar and guards work
-      localStorage.setItem(
-        "me",
-        JSON.stringify({ ...data.admin, role: "ADMIN" })
-      );
-
+      localStorage.setItem("me", JSON.stringify({ ...data.admin, role: "ADMIN" }));
+      if (!remember) {
+        // (optional) no-op: you could clear token on unload if you want
+      }
       nav("/admin", { replace: true });
-    } catch (err) {
-      alert(err.message || "Login failed");
+    } catch (err2) {
+      setEmailError(err2.message || "Login failed");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <>
-      <section className="adminHero">
-        <div className="adminHero__inner">
-          <h1 className="adminHero__title">Hello <span role="img" aria-label="wave">👋</span> Welcome!</h1>
-          <p className="adminHero__sub">Please login to admin dashboard</p>
+    <div className="alPage">
+      <header className="alTop">
+        <div className="alBrand">
+          <img src="/logo.png" alt="" className="alLogo" />
+          <span>Founders App</span>
         </div>
-      </section>
+        <nav className="alTopLinks">
+          <a href="/" className="alTopLink">Back to site</a>
+          <a href="mailto:support@yourdomain.com" className="alTopLink">Help</a>
+        </nav>
+      </header>
 
-      <main className="adminMain">
-        <div className="adminCard">
-          <h2 className="adminCard__title">LogIn</h2>
-          <p className="adminCard__hint">Please login to admin dashboard</p>
+      <main className="alCenter">
+        <div className="alCard" role="group" aria-label="Admin login">
+          <h1 className="alTitle">Admin Login</h1>
+          <p className="alSubtitle">Please enter your credentials.</p>
 
-          <form className="adminForm" onSubmit={submit}>
-            <div className="field">
-              <span className="iconLeft" aria-hidden>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M4 6h16v12H4z" stroke="currentColor" strokeWidth="1.6" />
-                  <path d="M4 7l8 6 8-6" stroke="currentColor" strokeWidth="1.6" fill="none"/>
-                </svg>
-              </span>
+          <form className="alForm" onSubmit={submit} noValidate>
+            <label className="alLabel" htmlFor="admin-email">Email or username</label>
+            <div className={`alField ${emailError ? "hasError" : ""}`}>
               <input
-                className="input"
-                type="email"
-                placeholder="Email/Username*"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="admin-email"
+                className="alInput"
+                type="text"
+                placeholder="you@company.com"
                 autoComplete="username"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError(validateEmailLike(e.target.value));
+                }}
                 required
               />
             </div>
+            {emailError ? (
+              <div className="alBadge error">
+                <span className="ico">✖</span> {emailError}
+              </div>
+            ) : null}
 
-            <div className="field">
-              <span className="iconLeft" aria-hidden>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <rect x="5" y="10" width="14" height="9" rx="2" stroke="currentColor" strokeWidth="1.6"/>
-                  <path d="M8 10V8a4 4 0 1 1 8 0v2" stroke="currentColor" strokeWidth="1.6"/>
-                </svg>
-              </span>
+            <label className="alLabel" htmlFor="admin-pass">Password</label>
+            <div className="alField">
               <input
-                className="input"
+                id="admin-pass"
+                className="alInput"
                 type={show ? "text" : "password"}
-                placeholder="Password*"
+                placeholder="Enter your password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
                 required
               />
               <button
                 type="button"
-                className="iconRight"
+                className="alEye"
                 aria-label={show ? "Hide password" : "Show password"}
                 onClick={() => setShow((s) => !s)}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z" stroke="currentColor" strokeWidth="1.6" />
-                  <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
-                </svg>
+                {show ? "🙈" : "👁️"}
               </button>
             </div>
+            {password ? (
+              <div className={`alBadge ${pwdLooksGood ? "ok" : "note"}`}>
+                <span className="ico">{pwdLooksGood ? "✔" : "ℹ"}</span>
+                {pwdLooksGood ? "Looks good!" : "Use at least 6 characters"}
+              </div>
+            ) : null}
 
-            <div className="rowBetween">
-              <label className="remember">
+            <div className="alRow">
+              <label className="alRemember">
                 <input
                   type="checkbox"
                   checked={remember}
@@ -117,17 +135,38 @@ export default function AdminLogin() {
                 <span>Remember me</span>
               </label>
 
-              <Link className="link" to="/admin/forgot-password">
+              <Link className="alLink" to="/admin/forgot-password">
                 Forgot password?
               </Link>
             </div>
 
-            <button className="adminBtn" type="submit" disabled={loading}>
+            <button className="alBtn primary" type="submit" disabled={loading}>
               {loading ? "Logging in…" : "Login"}
             </button>
+
+            <div className="alOr">
+              <span className="line" />
+              <span className="txt">Or</span>
+              <span className="line" />
+            </div>
+
+            {/* Social placeholders (non-functional) */}
+            <div className="alSocial">
+              <button type="button" className="alBtn ghost" disabled title="Not enabled">
+                <span className="sIco">🟢</span> Continue with Google
+              </button>
+              <button type="button" className="alBtn ghost" disabled title="Not enabled">
+                <span className="sIco">🟦</span> Continue with Microsoft
+              </button>
+            </div>
+
+            <p className="alLegal">
+              By logging in, you agree to the <a href="#" className="alLink">Terms</a> and{" "}
+              <a href="#" className="alLink">Privacy</a>.
+            </p>
           </form>
         </div>
       </main>
-    </>
+    </div>
   );
 }
