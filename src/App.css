@@ -3109,3 +3109,66 @@ body:has(.authWrap) .siteNav{
 @media (max-width: 1024px){
   .taTop{grid-template-columns:1fr}
 }
+
+/* ===== Daily Submissions (ds*) ===== */
+.dsWrap{padding:20px;background:#f5f7fb;color:#0f172a}
+.dsHero{background:linear-gradient(180deg,#e8f0ff,transparent 65%);border-radius:16px;padding:16px 18px 26px;margin-bottom:12px}
+.dsCrumb{color:#6b7a99;font-weight:600;margin-bottom:6px}
+.dsCrumb .sep{margin:0 6px;opacity:.6}
+.dsHero h1{margin:0;font-size:34px;letter-spacing:.2px}
+
+.dsChips{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 8px}
+.dsChip{background:#fff;border:1px solid #e6ebf5;border-radius:14px;padding:10px 14px;font-weight:700;cursor:pointer;color:#37517e}
+.dsChip .count{margin-left:8px;background:#eef4ff;border:1px solid #dbe8ff;border-radius:10px;padding:2px 8px;font-size:12px}
+.dsChip.active{background:#4f7cfb;color:#fff;border-color:#4f7cfb}
+.dsChip.active .count{background:#3b66e9;border-color:#3b66e9;color:#fff}
+
+.dsMain{display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start}
+.dsLeft{}
+.dsFilters{display:flex;gap:10px;align-items:center;margin:10px 0}
+.dsControl{display:flex;align-items:center;gap:8px;border:1px solid #dfe6fb;background:#fff;border-radius:12px;padding:8px 10px}
+.dsControl input,.dsControl select{border:none;outline:none;background:transparent}
+.dsControl.grow{flex:1}
+.dsControl .ico{opacity:.65}
+
+.dsBtn{padding:10px 14px;border-radius:12px;border:1px solid #dfe6fb;background:#fff;cursor:pointer;font-weight:700}
+.dsBtn:hover{background:#f5f8ff}
+.dsBtn.outline{border-color:#cfe0ff;background:#eef5ff}
+.dsBtn.danger{border-color:#ffd8d8;background:#fff1f1;color:#b42318}
+
+.dsTableCard{background:#fff;border:1px solid #e6ebf5;border-radius:16px;box-shadow:0 2px 12px rgba(10,19,60,.06)}
+.dsTableWrap{overflow:auto}
+.dsTable{width:100%;border-collapse:separate;border-spacing:0}
+.dsTable th,.dsTable td{padding:12px 14px;border-bottom:1px solid #edf1fd;white-space:nowrap}
+.dsTable tr.selected{background:#f1f6ff}
+.linklike{color:#2957ff;font-weight:700;cursor:pointer}
+.rowActions .mini{padding:6px 10px;border-radius:10px;border:1px solid #dfe6fb;background:#fff}
+.rowActions .mini.danger{border-color:#ffd8d8;background:#fff1f1;color:#b42318}
+.center{text-align:center}
+.muted{color:#6b7a99}
+
+.dsTag{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.2px}
+.dsTag.pending{background:#fff7ed;color:#b45309;border:1px solid #fde6c9}
+.dsTag.approved{background:#ecfdf5;color:#047857;border:1px solid #b3f0d8}
+.dsTag.rejected{background:#fef2f2;color:#b91c1c;border:1px solid #ffdada}
+
+.dsSide{}
+.dsCard{background:#fff;border:1px solid #e6ebf5;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(10,19,60,.06)}
+.dsSideTitle{margin:2px 0 10px}
+.dsPerson{display:flex;gap:12px;align-items:center;margin:10px 0 6px}
+.dsPerson .avatar{width:36px;height:36px;border-radius:999px;background:#eef4ff;display:grid;place-items:center;font-weight:800;color:#345}
+.dsPerson .name{font-weight:800}
+.dsKV{display:flex;justify-content:space-between;margin:8px 0}
+.dsKV .k{color:#6b7a99}
+.dsBlock{margin-top:12px}
+.dsBlockTitle{font-weight:800;margin-bottom:6px}
+.dsNote{background:#f8fbff;border:1px solid #e6ebf5;border-radius:12px;padding:10px}
+.dsFiles{display:flex;gap:8px}
+.dsFiles .file{display:inline-block;padding:8px 10px;border-radius:10px;border:1px solid #dfe6fb;background:#fafcff}
+.dsSideActions{margin-top:12px;display:flex;gap:8px}
+
+.dsAlert{margin-top:12px;background:#fff4f4;border:1px solid #ffdede;color:#b42318;padding:10px 12px;border-radius:12px}
+
+@media (max-width: 1024px){
+  .dsMain{grid-template-columns:1fr}
+}
