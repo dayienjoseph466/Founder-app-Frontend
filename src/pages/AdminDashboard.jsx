@@ -1,135 +1,314 @@
-// client/src/pages/AdminLogin.jsx
-import React, { useState } from "react";
-import { API_URL } from "../api";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { API_URL, authHeader } from "../api";
+import { useNavigate } from "react-router-dom";
 
-export default function AdminLogin() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [show, setShow] = useState(false);
-  const [remember, setRemember] = useState(false);
-  const [loading, setLoading] = useState(false);
+export default function AdminDashboard() {
   const nav = useNavigate();
+  const [logs, setLogs] = useState([]);
+  const [board, setBoard] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
-  async function submit(e) {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      // use ADMIN endpoint
-      const r = await fetch(`${API_URL}/api/admin/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!r.ok) {
-        const t = await r.text().catch(() => "");
-        throw new Error(t || "Login failed");
+  useEffect(() => {
+    let isMounted = true;
+    async function load() {
+      try {
+        setLoading(true);
+        setErr("");
+        const [rLogs, rBoard] = await Promise.all([
+          fetch(`${API_URL}/api/admin/logs`, { headers: { ...authHeader() } }),
+          fetch(`${API_URL}/api/scoreboard`, { headers: { ...authHeader() } }),
+        ]);
+        if (!rLogs.ok) throw new Error(await rLogs.text());
+        if (!rBoard.ok) throw new Error(await rBoard.text());
+        const logsJson = await rLogs.json();
+        const boardJson = await rBoard.json();
+        if (isMounted) {
+          setLogs(Array.isArray(logsJson) ? logsJson : []);
+          setBoard(Array.isArray(boardJson) ? boardJson : []);
+        }
+      } catch (e) {
+        setErr(e?.message || "Failed to load dashboard");
+      } finally {
+        if (isMounted) setLoading(false);
       }
-      const data = await r.json(); // { token, admin }
-      localStorage.setItem("token", data.token);
-      // ensure role is ADMIN for guards/nav
-      localStorage.setItem("me", JSON.stringify({ ...data.admin, role: "ADMIN" }));
-      nav("/admin", { replace: true });
-    } catch (err) {
-      alert(err.message || "Login failed");
+    }
+    load();
+    return () => { isMounted = false; };
+  }, []);
+
+  const stats = useMemo(() => {
+    const totalUsers =
+      board.length ||
+      new Set(
+        logs.map((l) => (typeof l.userId === "object" ? l.userId?._id : l.userId))
+      ).size;
+
+    const pending = logs.filter((l) => l.status === "PENDING").length;
+
+    const totalLifetime = board.reduce(
+      (acc, r) => acc + (Number(r.total) || 0),
+      0
+    );
+
+    // Sort newest first by updatedAt/createdAt/date
+    const latest = [...logs]
+      .sort((a, b) => {
+        const da = new Date(a.updatedAt || a.createdAt || a.date || 0).getTime();
+        const db = new Date(b.updatedAt || b.createdAt || b.date || 0).getTime();
+        return db - da;
+      })
+      .slice(0, 6);
+
+    const activity = latest.map((l) => ({
+      who: l.userId?.name || "Unknown",
+      what: l.taskId?.title || "Task",
+      status: l.status || "",
+      when: l.date || "",
+    }));
+
+    return { totalUsers, pending, totalLifetime, latest, activity };
+  }, [logs, board]);
+
+  async function doResetScores() {
+    try {
+      setResetting(true);
+      const r = await fetch(`${API_URL}/api/admin/score/reset`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...authHeader() },
+      });
+      if (!r.ok) throw new Error(await r.text());
+      // Refresh data
+      const [rLogs, rBoard] = await Promise.all([
+        fetch(`${API_URL}/api/admin/logs`, { headers: { ...authHeader() } }),
+        fetch(`${API_URL}/api/scoreboard`, { headers: { ...authHeader() } }),
+      ]);
+      setLogs(await rLogs.json());
+      setBoard(await rBoard.json());
+      setConfirmOpen(false);
+      alert("Scores and submissions cleared.");
+    } catch (e) {
+      alert(e?.message || "Reset failed");
     } finally {
-      setLoading(false);
+      setResetting(false);
     }
   }
 
   return (
-    <>
-      {/* HERO */}
-      <section className="adminHero pro">
-        <div className="adminHero__inner">
-          <h1 className="adminHero__title">
-            Hello <span role="img" aria-label="wave">👋</span> Welcome!
-          </h1>
-          <p className="adminHero__sub">Please login to admin dashboard</p>
+    <div className="adShell">
+      {/* Sidebar */}
+      <aside className="adSidebar">
+        <div className="adBrand">
+          <img src="/logo.png" alt="" />
+          <span>Founders App</span>
         </div>
-      </section>
+        <nav className="adNav">
+          <button className="adNav__item adNav__item--active">Dashboard</button>
+          <button className="adNav__item" onClick={() => nav("/admin/tasks")}>
+            Tasks
+          </button>
+          <button className="adNav__item" onClick={() => nav("/admin/daily")}>
+            Submissions
+          </button>
+          <button className="adNav__item" onClick={() => nav("/admin")}>
+            Users
+          </button>
+          <button className="adNav__item" onClick={() => nav("/admin")}>
+            Scores
+          </button>
+          <button className="adNav__item" onClick={() => nav("/admin")}>
+            Settings
+          </button>
+        </nav>
+      </aside>
 
-      {/* MAIN */}
-      <main className="adminMain pro">
-        <div className="adminCard pro" role="group" aria-label="Admin login">
-          <header className="adminCard__head">
-            <div className="dot" aria-hidden />
-            <div>
-              <h2 className="adminCard__title">LogIn</h2>
-              <p className="adminCard__hint">Please login to admin dashboard</p>
+      {/* Main */}
+      <main className="adMain">
+        {/* Hero */}
+        <header className="adHero">
+          <div>
+            <h1>Hello Admin</h1>
+            <p>Overview of users, tasks and daily submissions.</p>
+          </div>
+          <div className="adAvatar" title="Admin" />
+        </header>
+
+        {/* Quick actions */}
+        <div className="adActions">
+          <button className="adBtn" onClick={() => nav("/admin/daily")}>
+            View Task Submissions
+          </button>
+          <button className="adBtn" onClick={() => nav("/admin/tasks")}>
+            Add Task
+          </button>
+          <button
+            className="adBtn adBtn--danger"
+            onClick={() => setConfirmOpen(true)}
+          >
+            Delete Lifetime Score
+          </button>
+        </div>
+
+        {/* Stat cards */}
+        <section className="adRow">
+          <article className="adCard">
+            <div className="adCard__title">Total Users</div>
+            <div className="adCard__value">
+              {loading ? "—" : stats.totalUsers}
             </div>
-          </header>
+          </article>
 
-          <form className="adminForm" onSubmit={submit}>
-            {/* EMAIL */}
-            <div className="field field--float">
-              <span className="iconLeft" aria-hidden>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="6" width="18" height="12" rx="3" stroke="currentColor" strokeWidth="1.6"/>
-                  <path d="M3 7l9 6 9-6" stroke="currentColor" strokeWidth="1.6" fill="none"/>
-                </svg>
-              </span>
-              <input
-                id="admin-email"
-                className="input input--float"
-                type="email"
-                placeholder=" "
-                autoComplete="username"
-                value={email}
-                onChange={(e)=>setEmail(e.target.value)}
-                required
-              />
-              <label htmlFor="admin-email">Email / Username</label>
+          <article className="adCard">
+            <div className="adCard__title">Pending Submissions</div>
+            <div className="adCard__value">
+              {loading ? "—" : stats.pending}
             </div>
+          </article>
 
-            {/* PASSWORD */}
-            <div className="field field--float">
-              <span className="iconLeft" aria-hidden>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <rect x="5" y="10" width="14" height="9" rx="2" stroke="currentColor" strokeWidth="1.6"/>
-                  <path d="M8 10V8a4 4 0 1 1 8 0v2" stroke="currentColor" strokeWidth="1.6"/>
-                </svg>
-              </span>
-              <input
-                id="admin-pass"
-                className="input input--float"
-                type={show ? "text" : "password"}
-                placeholder=" "
-                autoComplete="current-password"
-                value={password}
-                onChange={(e)=>setPassword(e.target.value)}
-                required
-              />
-              <label htmlFor="admin-pass">Password</label>
-              <button
-                type="button"
-                className="iconRight"
-                aria-label={show ? "Hide password" : "Show password"}
-                onClick={()=>setShow(s=>!s)}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z" stroke="currentColor" strokeWidth="1.6"/>
-                  <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6"/>
-                </svg>
+          <article className="adCard">
+            <div className="adCard__title">Total Lifetime Score</div>
+            <div className="adCard__value">
+              {loading ? "—" : stats.totalLifetime.toLocaleString()}
+            </div>
+          </article>
+        </section>
+
+        {/* Content grid: table + activity */}
+        <section className="adGrid">
+          <article className="adPanel">
+            <div className="adPanel__head">
+              <h3>Latest Submissions</h3>
+              <button className="linkBtn" onClick={() => nav("/admin/daily")}>
+                View all
               </button>
             </div>
 
-            {/* OPTIONS */}
-            <div className="rowBetween">
-              <label className="remember">
-                <input type="checkbox" checked={remember} onChange={(e)=>setRemember(e.target.checked)} />
-                <span>Remember me</span>
-              </label>
-              <Link className="link" to="/admin/forgot-password">Forgot password?</Link>
+            <div className="adTableWrap">
+              <table className="adTable">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Task</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Points</th>
+                    <th />
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: "center" }}>
+                        Loading…
+                      </td>
+                    </tr>
+                  ) : stats.latest.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: "center" }}>
+                        No submissions yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    stats.latest.map((l) => (
+                      <tr key={l._id}>
+                        <td>{l.userId?.name || "—"}</td>
+                        <td>{l.taskId?.title || "—"}</td>
+                        <td>
+                          <span
+                            className={
+                              "status " +
+                              (l.status === "VERIFIED"
+                                ? "ok"
+                                : l.status === "REJECTED"
+                                ? "bad"
+                                : "pending")
+                            }
+                          >
+                            {l.status || "—"}
+                          </span>
+                        </td>
+                        <td>{l.date || "—"}</td>
+                        <td>{l.taskId?.points ?? "—"}</td>
+                        <td>
+                          <button
+                            className="miniBtn"
+                            onClick={() => nav("/admin/daily")}
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
+          </article>
 
-            {/* SUBMIT */}
-            <button className="adminBtn pro" type="submit" disabled={loading}>
-              {loading ? "Logging in…" : "Login"}
-            </button>
-          </form>
-        </div>
+          <aside className="adPanel">
+            <div className="adPanel__head">
+              <h3>Activity</h3>
+            </div>
+            <ul className="adActivity">
+              {loading ? (
+                <li>Loading…</li>
+              ) : stats.activity.length === 0 ? (
+                <li>No recent activity.</li>
+              ) : (
+                stats.activity.map((a, i) => (
+                  <li key={i}>
+                    <strong>{a.who}</strong>{" "}
+                    <span className="muted">submitted</span>{" "}
+                    <strong>{a.what}</strong>{" "}
+                    <span
+                      className={
+                        "status inline " +
+                        (a.status === "VERIFIED"
+                          ? "ok"
+                          : a.status === "REJECTED"
+                          ? "bad"
+                          : "pending")
+                      }
+                    >
+                      {a.status}
+                    </span>
+                    <div className="muted small">{a.when}</div>
+                  </li>
+                ))
+              )}
+            </ul>
+          </aside>
+        </section>
+
+        {err ? <div className="adError">{err}</div> : null}
       </main>
-    </>
+
+      {/* Confirm modal */}
+      {confirmOpen && (
+        <div className="adModal">
+          <div className="adModal__dialog">
+            <div className="adModal__title">Confirm reset of lifetime score</div>
+            <p className="muted">
+              This will delete all scores, submissions and reviews. This action
+              cannot be undone.
+            </p>
+            <div className="adModal__actions">
+              <button className="adBtn" onClick={() => setConfirmOpen(false)}>
+                Cancel
+              </button>
+              <button
+                className="adBtn adBtn--danger"
+                onClick={doResetScores}
+                disabled={resetting}
+              >
+                {resetting ? "Resetting…" : "Reset Score"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
