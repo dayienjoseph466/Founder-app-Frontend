@@ -1,6 +1,7 @@
 // client/src/pages/Dashboard.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { API_URL } from "../api";
+import ReviewsPanel from "../components/ReviewsPanel";
 import "../App.css";
 
 function toYMD(d) {
@@ -24,40 +25,21 @@ function lookForStatus(status) {
   }
 }
 
-function decisionColor(d) {
-  if (d === "APPROVE") return "#0a6";
-  if (d === "REJECT") return "#b00020";
-  return "#666";
-}
-
-// who is allowed to review whose work
-function shouldReview(myRole, ownerRole) {
+const REVIEW_RULES = {
+  CEO: ["COO", "MARKETING"],
+  COO: ["CEO", "MARKETING"],
+  MARKETING: ["CEO", "COO"],
+};
+const canReview = (myRole, ownerRole) => {
   const me = String(myRole || "").toUpperCase();
   const owner = String(ownerRole || "").toUpperCase();
-
-  // your rule
-  if (owner === "CEO") {
-    return me === "COO" || me === "MARKETING MANAGER";
-  }
-  // everything else shows to everyone for now
-  return true;
-}
-
-// try to read the submitter role from different api shapes
-function getOwnerRole(item) {
-  return (
-    item?.user?.role ||
-    item?.owner?.role ||
-    item?.userId?.role ||
-    item?.submittedBy?.role ||
-    ""
-  );
-}
+  const needed = REVIEW_RULES[owner] || ["COO", "MARKETING"];
+  return needed.includes(me);
+};
 
 export default function Dashboard() {
   const token = localStorage.getItem("token");
   const me = JSON.parse(localStorage.getItem("me") || "null");
-  const myRole = me?.role;
   const authHeader = { Authorization: `Bearer ${token}` };
 
   const [dateStr, setDateStr] = useState(toYMD(new Date()));
@@ -71,7 +53,7 @@ export default function Dashboard() {
   });
 
   const [reviewInbox, setReviewInbox] = useState([]); // items you should review
-  const [lifetime, setLifetime] = useState([]); // [{name, role, total}]
+  const [lifetime, setLifetime] = useState([]); // team scoreboard
 
   const [drafts, setDrafts] = useState({});
   const [savingTaskId, setSavingTaskId] = useState(null);
@@ -80,16 +62,16 @@ export default function Dashboard() {
     setDrafts((prev) => ({ ...prev, [taskId]: { ...(prev[taskId] || {}), ...patch } }));
   }
 
-  // load tasks once
+  // tasks one time
   useEffect(() => {
     fetch(`${API_URL}/api/tasks`, { headers: authHeader })
       .then((r) => (r.ok ? r.json() : []))
       .then(setTasks)
       .catch(() => setTasks([]));
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // logs and score for the chosen date
+  // logs and today score by date
   useEffect(() => {
     const qs = new URLSearchParams({ date: dateStr });
 
@@ -109,74 +91,43 @@ export default function Dashboard() {
         r.ok ? r.json() : { total: 0, rawPoints: 0, proofBonus: 0, verifyBonus: 0 }
       )
       .then(setScore);
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateStr]);
 
-  // review inbox and lifetime board
+  // inbox + lifetime
   useEffect(() => {
-    async function loadInbox() {
-      const endpoints = [
-        `${API_URL}/api/review/inbox`,
-        `${API_URL}/api/reviews/inbox`,
-        `${API_URL}/api/logs/reviewable`,
-      ];
-
-      for (const u of endpoints) {
-        try {
-          const r = await fetch(u, { headers: authHeader });
-          if (!r.ok) continue;
-
-          const raw = await r.json();
-          const arr = Array.isArray(raw) ? raw : raw.items || [];
-
-          // filter by your role routing rule
-          const filtered = arr.filter((it) => shouldReview(myRole, getOwnerRole(it)));
-          setReviewInbox(filtered);
-          return;
-        } catch {}
-      }
-      setReviewInbox([]);
-    }
-
-    async function loadLifetime() {
-      const endpoints = [
-        `${API_URL}/api/scoreboard`,
-        `${API_URL}/api/scores/team`,
-        `${API_URL}/api/admin/scoreboard`,
-      ];
-      for (const u of endpoints) {
-        try {
-          const r = await fetch(u, { headers: authHeader });
-          if (!r.ok) continue;
-
-          let data = await r.json();
-          if (Array.isArray(data)) {
-            data = data.map((x) => ({
-              name: x.name || x.user?.name || "Unknown",
-              role: x.role || x.user?.role || "",
-              total: Number(x.total ?? x.score ?? 0),
-            }));
-          } else if (Array.isArray(data.rows)) {
-            data = data.rows.map((x) => ({
-              name: x.name || x.user?.name || "Unknown",
-              role: x.role || x.user?.role || "",
-              total: Number(x.total ?? x.score ?? 0),
-            }));
-          } else {
-            data = [];
-          }
-          data.sort((a, b) => b.total - a.total);
-          setLifetime(data);
-          return;
-        } catch {}
-      }
-      setLifetime([]);
-    }
-
     loadInbox();
     loadLifetime();
-    // eslint-disable-next-line
-  }, [myRole]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [me?.role]);
+
+  async function loadInbox() {
+    try {
+      // server route that actually exists
+      const r = await fetch(`${API_URL}/api/reviews/pending?date=${encodeURIComponent(dateStr)}`, {
+        headers: authHeader,
+      });
+      const raw = r.ok ? await r.json() : [];
+      const arr = Array.isArray(raw) ? raw : [];
+      // server returns submitter under userId
+      const filtered = arr.filter((it) => canReview(me?.role, it?.userId?.role));
+      setReviewInbox(filtered);
+    } catch {
+      setReviewInbox([]);
+    }
+  }
+
+  async function loadLifetime() {
+    try {
+      const r = await fetch(`${API_URL}/api/scoreboard`, { headers: authHeader });
+      let data = r.ok ? await r.json() : [];
+      if (!Array.isArray(data)) data = [];
+      data.sort((a, b) => b.total - a.total);
+      setLifetime(data);
+    } catch {
+      setLifetime([]);
+    }
+  }
 
   const logByTask = useMemo(() => {
     const m = new Map();
@@ -372,6 +323,22 @@ export default function Dashboard() {
               })}
             </div>
           )}
+
+          {/* full review panel for COO and Marketing etc */}
+          <div className="card" style={{ marginTop: 16 }}>
+            <ReviewsPanel
+              dateStr={dateStr}
+              onReviewed={() => {
+                // refresh the small count on the right after any action
+                loadInbox();
+                // also refresh logs so the status chips update
+                const qs = new URLSearchParams({ date: dateStr });
+                fetch(`${API_URL}/api/logs?${qs}`, { headers: authHeader })
+                  .then((r) => (r.ok ? r.json() : []))
+                  .then(setLogs);
+              }}
+            />
+          </div>
         </section>
 
         {/* right column */}
@@ -387,10 +354,9 @@ export default function Dashboard() {
               ) : (
                 reviewInbox.slice(0, 8).map((it, i) => (
                   <li key={it._id || i} className="listRow">
-                    <div className="listTitle">{it.title || it.task?.title || "Task"}</div>
+                    <div className="listTitle">{it.taskId?.title || "Task"}</div>
                     <div className="listSub">
-                      by {it.user?.name || it.owner?.name || it.userId?.name || "User"}{" "}
-                      {`(${getOwnerRole(it) || "role unknown"})`}
+                      by {it.userId?.name || "User"} ({it.userId?.role || "role unknown"})
                     </div>
                   </li>
                 ))
@@ -406,7 +372,7 @@ export default function Dashboard() {
               <ol className="board">
                 {lifetime.slice(0, 12).map((row, idx) => (
                   <li
-                    key={row.name + idx}
+                    key={String(row.userId || row.name) + idx}
                     className={`boardRow ${idx === 0 ? "gold" : idx === 1 ? "silver" : idx === 2 ? "bronze" : ""}`}
                   >
                     <div className="rank">{idx + 1}</div>

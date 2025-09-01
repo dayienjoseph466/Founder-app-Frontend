@@ -1,34 +1,36 @@
-// client/src/components/ReviewsPanel.jsx
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api";
 
-function toAbsoluteProof(url) {
+function toAbsolute(url) {
   if (!url) return null;
-  if (/^https?:\/\//i.test(url)) return url;            // already absolute
-  if (url.startsWith(API_URL)) return url;               // already prefixed
+  if (/^https?:\/\//i.test(url)) return url;
   return `${API_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
+function looksLikeImage(url) {
+  return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(url || "");
 }
 
 export default function ReviewsPanel({ dateStr, onReviewed }) {
   const token = localStorage.getItem("token");
-  const [items, setItems] = useState([]);
-  const [comments, setComments] = useState({}); // {logId: text}
-  const [loading, setLoading] = useState(false);
-
   const authHeader = { Authorization: `Bearer ${token}` };
+
+  const [items, setItems] = useState([]);
+  const [comments, setComments] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [previewSrc, setPreviewSrc] = useState({}); // {logId: objectUrl}
 
   useEffect(() => {
     async function load() {
       try {
         setLoading(true);
-        const qs = new URLSearchParams();
-        if (dateStr) qs.set("date", dateStr);
-
-        const r = await fetch(`${API_URL}/api/reviews/pending?${qs}`, {
+        // show todays items when date is given. if you want everything, drop the query
+        const qs = dateStr ? `?date=${encodeURIComponent(dateStr)}` : "";
+        const r = await fetch(`${API_URL}/api/reviews/pending${qs}`, {
           headers: authHeader,
         });
         const rows = r.ok ? await r.json() : [];
-        setItems(rows || []);
+        setItems(Array.isArray(rows) ? rows : []);
       } catch {
         setItems([]);
       } finally {
@@ -36,130 +38,126 @@ export default function ReviewsPanel({ dateStr, onReviewed }) {
       }
     }
     load();
+    // revoke old previews when date changes
+    return () => {
+      Object.values(previewSrc).forEach((u) => URL.revokeObjectURL(u));
+      setPreviewSrc({});
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateStr]);
+
+  async function openProof(it) {
+    try {
+      const href = toAbsolute(it.proofUrl);
+      if (!href) return alert("No proof attached");
+
+      // fetch with auth so protected files work
+      const r = await fetch(href, { headers: authHeader });
+      if (!r.ok) throw new Error("Could not load proof");
+      const blob = await r.blob();
+      const obj = URL.createObjectURL(blob);
+
+      // if it is an image, show inline preview. otherwise open a new tab
+      if (looksLikeImage(it.proofUrl) || blob.type.startsWith("image/")) {
+        // clean old url for this item
+        if (previewSrc[it._id]) URL.revokeObjectURL(previewSrc[it._id]);
+        setPreviewSrc((p) => ({ ...p, [it._id]: obj }));
+      } else {
+        window.open(obj, "_blank", "noopener,noreferrer");
+        setTimeout(() => URL.revokeObjectURL(obj), 60000);
+      }
+    } catch (e) {
+      alert("Failed to open proof");
+    }
+  }
 
   async function sendDecision(item, decision) {
     try {
       const body = {
         logId: item._id,
-        decision, // "APPROVE" or "REJECT"
+        decision, // APPROVE or REJECT
         comment: comments[item._id] || "",
       };
-
       const r = await fetch(`${API_URL}/api/reviews`, {
         method: "POST",
-        headers: {
-          ...authHeader,
-          "Content-Type": "application/json",
-        },
+        headers: { ...authHeader, "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-
       if (!r.ok) {
-        const txt = await r.text();
-        alert(txt || "Failed to submit review");
+        const t = await r.text();
+        alert(t || "Review failed");
         return;
       }
-
-      // remove reviewed item locally
+      // remove from list and clear preview
       setItems((prev) => prev.filter((x) => x._id !== item._id));
-      setComments((prev) => {
-        const copy = { ...prev };
-        delete copy[item._id];
-        return copy;
-      });
-
-      // let parent refresh scores/logs if they provided a callback
+      if (previewSrc[item._id]) {
+        URL.revokeObjectURL(previewSrc[item._id]);
+        setPreviewSrc((p) => {
+          const c = { ...p };
+          delete c[item._id];
+          return c;
+        });
+      }
       onReviewed && onReviewed();
-    } catch (e) {
-      alert("Network error while submitting review");
+    } catch {
+      alert("Network error while sending review");
     }
   }
 
+  if (loading) return <div>Loading…</div>;
+  if (items.length === 0) return <div>No items to review</div>;
+
   return (
-    <>
-      <h3>Reviews</h3>
-      {loading ? (
-        <div>Loading…</div>
-      ) : items.length === 0 ? (
-        <div>No items to review</div>
-      ) : (
-        <div style={{ display: "grid", gap: 12 }}>
-          {items.map((it) => {
-            const proofHref = toAbsoluteProof(it.proofUrl);
-            return (
-              <div
-                key={it._id}
-                style={{
-                  border: "1px solid #ddd",
-                  borderRadius: 8,
-                  padding: 12,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <strong style={{ fontSize: 15, marginRight: 8 }}>
-                    {it.taskId?.title || "Task"}
-                  </strong>
-                  <span style={{ color: "#666", fontSize: 12 }}>
-                    from {it.userId?.name} ({it.userId?.role})
-                  </span>
-                  <div style={{ marginLeft: "auto" }}>
-                    {proofHref && (
-                      <a
-                        href={proofHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View proof
-                      </a>
-                    )}
-                  </div>
-                </div>
+    <div className="stack">
+      {items.map((it) => {
+        const imgUrl = previewSrc[it._id];
+        return (
+          <div key={it._id} className="card">
+            <div className="row" style={{ alignItems: "center" }}>
+              <strong className="listTitle">{it.taskId?.title || "Task"}</strong>
+              <div className="grow" />
+              <span className="listSub">
+                from {it.userId?.name} ({it.userId?.role})
+              </span>
+            </div>
 
-                <div
-                  style={{
-                    marginTop: 8,
-                    background: "#fafafa",
-                    border: "1px dashed #ddd",
-                    borderRadius: 6,
-                    padding: "8px 10px",
-                    fontSize: 13,
-                  }}
-                >
-                  {it.note || <em style={{ color: "#666" }}>No note</em>}
-                </div>
+            <div className="note neutral" style={{ marginTop: 8 }}>
+              {it.note || <em className="muted">No note</em>}
+            </div>
 
-                <textarea
-                  rows={2}
-                  placeholder="feedback"
-                  value={comments[it._id] || ""}
-                  onChange={(e) =>
-                    setComments((prev) => ({
-                      ...prev,
-                      [it._id]: e.target.value,
-                    }))
-                  }
+            <div className="row" style={{ gap: 8, marginTop: 8, alignItems: "center" }}>
+              <button className="btn ghost" onClick={() => openProof(it)}>
+                View proof
+              </button>
+              {imgUrl ? (
+                <span className="muted">Image preview shown below</span>
+              ) : null}
+              <div className="grow" />
+              <button className="btn primary" onClick={() => sendDecision(it, "APPROVE")}>
+                Approve
+              </button>
+              <button className="btn" onClick={() => sendDecision(it, "REJECT")}>
+                Reject
+              </button>
+            </div>
+
+            {imgUrl ? (
+              <div style={{ marginTop: 8 }}>
+                <img
+                  src={imgUrl}
+                  alt="proof"
                   style={{
-                    width: "100%",
-                    marginTop: 8,
-                    resize: "vertical",
+                    maxWidth: "100%",
+                    borderRadius: 8,
+                    border: "1px solid #e5e7eb",
+                    display: "block",
                   }}
                 />
-
-                <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
-                  <button onClick={() => sendDecision(it, "APPROVE")}>
-                    Approve
-                  </button>
-                  <button onClick={() => sendDecision(it, "REJECT")}>
-                    Reject
-                  </button>
-                </div>
               </div>
-            );
-          })}
-        </div>
-      )}
-    </>
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
   );
 }
