@@ -113,45 +113,6 @@ export default function Dashboard() {
     // eslint-disable-next-line
   }, [dateStr]);
 
-  {/* below the checklist so COO can act */}
-<ReviewsPanel
-  dateStr={dateStr}
-  onReviewed={() => {
-    // refresh right-side count after any review action
-    const endpoints = [
-      `${API_URL}/api/reviews/pending`,
-      `${API_URL}/api/review/inbox`,
-      `${API_URL}/api/logs/reviewable`,
-    ];
-    (async () => {
-      for (const u of endpoints) {
-        try {
-          const r = await fetch(u, { headers: { Authorization: `Bearer ${token}` } });
-          if (r.ok) {
-            const data = await r.json();
-            const arr = Array.isArray(data) ? data : data.items || data.rows || [];
-            // use the same filter as ReviewsPanel for accuracy
-            const norm = (s) => String(s || "").trim().toUpperCase().replace(/\s+/g, " ");
-            const myRole = norm(JSON.parse(localStorage.getItem("me") || "{}")?.role);
-            const getRole = (it) =>
-              it?.user?.role || it?.owner?.role || it?.userId?.role || "";
-            const filtered = arr.filter((it) => {
-              const owner = norm(getRole(it));
-              if (owner === "CEO" || owner === "CHIEF EXECUTIVE OFFICER") {
-                return myRole === "COO" || myRole === "CHIEF OPERATING OFFICER" || myRole === "MARKETING MANAGER";
-              }
-              return true;
-            });
-            setReviewInbox(filtered);
-            return;
-          }
-        } catch {}
-      }
-      setReviewInbox([]);
-    })();
-  }}
-/>
-
   // review inbox and lifetime board
   useEffect(() => {
     async function loadInbox() {
