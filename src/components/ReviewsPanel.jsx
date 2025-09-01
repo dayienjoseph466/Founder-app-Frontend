@@ -1,18 +1,34 @@
-// client/src/components/ReviewsPanel.jsx
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api";
 
 function toAbsoluteProof(url) {
   if (!url) return null;
-  if (/^https?:\/\//i.test(url)) return url;            // already absolute
-  if (url.startsWith(API_URL)) return url;               // already prefixed
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith(API_URL)) return url;
   return `${API_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
+// who is allowed to review whose work
+function shouldReview(myRole, ownerRole) {
+  const me = String(myRole || "").toUpperCase();
+  const owner = String(ownerRole || "").toUpperCase();
+
+  // rule from you
+  // if the submitter is CEO then only COO or Marketing Manager can review
+  if (owner === "CEO") return me === "COO" || me === "MARKETING MANAGER";
+
+  // for everything else we allow all reviewers to see
+  // you can tighten this later if you want
+  return true;
 }
 
 export default function ReviewsPanel({ dateStr, onReviewed }) {
   const token = localStorage.getItem("token");
+  const me = JSON.parse(localStorage.getItem("me") || "null");
+  const myRole = me?.role;
+
   const [items, setItems] = useState([]);
-  const [comments, setComments] = useState({}); // {logId: text}
+  const [comments, setComments] = useState({});
   const [loading, setLoading] = useState(false);
 
   const authHeader = { Authorization: `Bearer ${token}` };
@@ -28,7 +44,13 @@ export default function ReviewsPanel({ dateStr, onReviewed }) {
           headers: authHeader,
         });
         const rows = r.ok ? await r.json() : [];
-        setItems(rows || []);
+
+        // filter based on your role routing
+        const filtered = (rows || []).filter((it) =>
+          shouldReview(myRole, it?.userId?.role)
+        );
+
+        setItems(filtered);
       } catch {
         setItems([]);
       } finally {
@@ -37,7 +59,7 @@ export default function ReviewsPanel({ dateStr, onReviewed }) {
     }
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateStr]);
+  }, [dateStr, myRole]);
 
   async function sendDecision(item, decision) {
     try {
@@ -45,14 +67,12 @@ export default function ReviewsPanel({ dateStr, onReviewed }) {
         logId: item._id,
         decision, // "APPROVE" or "REJECT"
         comment: comments[item._id] || "",
+        reviewerRole: myRole, // helpful for the server to enforce rules
       };
 
       const r = await fetch(`${API_URL}/api/reviews`, {
         method: "POST",
-        headers: {
-          ...authHeader,
-          "Content-Type": "application/json",
-        },
+        headers: { ...authHeader, "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
 
@@ -62,7 +82,6 @@ export default function ReviewsPanel({ dateStr, onReviewed }) {
         return;
       }
 
-      // remove reviewed item locally
       setItems((prev) => prev.filter((x) => x._id !== item._id));
       setComments((prev) => {
         const copy = { ...prev };
@@ -70,9 +89,8 @@ export default function ReviewsPanel({ dateStr, onReviewed }) {
         return copy;
       });
 
-      // let parent refresh scores/logs if they provided a callback
       onReviewed && onReviewed();
-    } catch (e) {
+    } catch {
       alert("Network error while submitting review");
     }
   }
@@ -106,11 +124,7 @@ export default function ReviewsPanel({ dateStr, onReviewed }) {
                   </span>
                   <div style={{ marginLeft: "auto" }}>
                     {proofHref && (
-                      <a
-                        href={proofHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                      <a href={proofHref} target="_blank" rel="noopener noreferrer">
                         View proof
                       </a>
                     )}
@@ -135,25 +149,14 @@ export default function ReviewsPanel({ dateStr, onReviewed }) {
                   placeholder="feedback"
                   value={comments[it._id] || ""}
                   onChange={(e) =>
-                    setComments((prev) => ({
-                      ...prev,
-                      [it._id]: e.target.value,
-                    }))
+                    setComments((prev) => ({ ...prev, [it._id]: e.target.value }))
                   }
-                  style={{
-                    width: "100%",
-                    marginTop: 8,
-                    resize: "vertical",
-                  }}
+                  style={{ width: "100%", marginTop: 8, resize: "vertical" }}
                 />
 
                 <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
-                  <button onClick={() => sendDecision(it, "APPROVE")}>
-                    Approve
-                  </button>
-                  <button onClick={() => sendDecision(it, "REJECT")}>
-                    Reject
-                  </button>
+                  <button onClick={() => sendDecision(it, "APPROVE")}>Approve</button>
+                  <button onClick={() => sendDecision(it, "REJECT")}>Reject</button>
                 </div>
               </div>
             );

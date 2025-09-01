@@ -30,27 +30,57 @@ function decisionColor(d) {
   return "#666";
 }
 
+// who is allowed to review whose work
+function shouldReview(myRole, ownerRole) {
+  const me = String(myRole || "").toUpperCase();
+  const owner = String(ownerRole || "").toUpperCase();
+
+  // your rule
+  if (owner === "CEO") {
+    return me === "COO" || me === "MARKETING MANAGER";
+  }
+  // everything else shows to everyone for now
+  return true;
+}
+
+// try to read the submitter role from different api shapes
+function getOwnerRole(item) {
+  return (
+    item?.user?.role ||
+    item?.owner?.role ||
+    item?.userId?.role ||
+    item?.submittedBy?.role ||
+    ""
+  );
+}
+
 export default function Dashboard() {
   const token = localStorage.getItem("token");
   const me = JSON.parse(localStorage.getItem("me") || "null");
+  const myRole = me?.role;
   const authHeader = { Authorization: `Bearer ${token}` };
 
   const [dateStr, setDateStr] = useState(toYMD(new Date()));
   const [tasks, setTasks] = useState([]);
   const [logs, setLogs] = useState([]);
-  const [score, setScore] = useState({ total: 0, rawPoints: 0, proofBonus: 0, verifyBonus: 0 });
+  const [score, setScore] = useState({
+    total: 0,
+    rawPoints: 0,
+    proofBonus: 0,
+    verifyBonus: 0,
+  });
 
-  const [reviewInbox, setReviewInbox] = useState([]);     // other users submissions to review
-  const [lifetime, setLifetime] = useState([]);           // [{name, role, total}]
+  const [reviewInbox, setReviewInbox] = useState([]); // items you should review
+  const [lifetime, setLifetime] = useState([]); // [{name, role, total}]
 
-  const [drafts, setDrafts] = useState({});               // per task draft
+  const [drafts, setDrafts] = useState({});
   const [savingTaskId, setSavingTaskId] = useState(null);
 
   function setDraft(taskId, patch) {
     setDrafts((prev) => ({ ...prev, [taskId]: { ...(prev[taskId] || {}), ...patch } }));
   }
 
-  // tasks one time
+  // load tasks once
   useEffect(() => {
     fetch(`${API_URL}/api/tasks`, { headers: authHeader })
       .then((r) => (r.ok ? r.json() : []))
@@ -59,7 +89,7 @@ export default function Dashboard() {
     // eslint-disable-next-line
   }, []);
 
-  // logs and today score by date
+  // logs and score for the chosen date
   useEffect(() => {
     const qs = new URLSearchParams({ date: dateStr });
 
@@ -90,14 +120,19 @@ export default function Dashboard() {
         `${API_URL}/api/reviews/inbox`,
         `${API_URL}/api/logs/reviewable`,
       ];
+
       for (const u of endpoints) {
         try {
           const r = await fetch(u, { headers: authHeader });
-          if (r.ok) {
-            const data = await r.json();
-            setReviewInbox(Array.isArray(data) ? data : data.items || []);
-            return;
-          }
+          if (!r.ok) continue;
+
+          const raw = await r.json();
+          const arr = Array.isArray(raw) ? raw : raw.items || [];
+
+          // filter by your role routing rule
+          const filtered = arr.filter((it) => shouldReview(myRole, getOwnerRole(it)));
+          setReviewInbox(filtered);
+          return;
         } catch {}
       }
       setReviewInbox([]);
@@ -112,25 +147,27 @@ export default function Dashboard() {
       for (const u of endpoints) {
         try {
           const r = await fetch(u, { headers: authHeader });
-          if (r.ok) {
-            let data = await r.json();
-            if (Array.isArray(data)) {
-              data = data.map((x) => ({
-                name: x.name || x.user?.name || "Unknown",
-                role: x.role || x.user?.role || "",
-                total: Number(x.total ?? x.score ?? 0),
-              }));
-            } else if (Array.isArray(data.rows)) {
-              data = data.rows.map((x) => ({
-                name: x.name || x.user?.name || "Unknown",
-                role: x.role || x.user?.role || "",
-                total: Number(x.total ?? x.score ?? 0),
-              }));
-            } else data = [];
-            data.sort((a, b) => b.total - a.total);
-            setLifetime(data);
-            return;
+          if (!r.ok) continue;
+
+          let data = await r.json();
+          if (Array.isArray(data)) {
+            data = data.map((x) => ({
+              name: x.name || x.user?.name || "Unknown",
+              role: x.role || x.user?.role || "",
+              total: Number(x.total ?? x.score ?? 0),
+            }));
+          } else if (Array.isArray(data.rows)) {
+            data = data.rows.map((x) => ({
+              name: x.name || x.user?.name || "Unknown",
+              role: x.role || x.user?.role || "",
+              total: Number(x.total ?? x.score ?? 0),
+            }));
+          } else {
+            data = [];
           }
+          data.sort((a, b) => b.total - a.total);
+          setLifetime(data);
+          return;
         } catch {}
       }
       setLifetime([]);
@@ -139,7 +176,7 @@ export default function Dashboard() {
     loadInbox();
     loadLifetime();
     // eslint-disable-next-line
-  }, []);
+  }, [myRole]);
 
   const logByTask = useMemo(() => {
     const m = new Map();
@@ -352,7 +389,8 @@ export default function Dashboard() {
                   <li key={it._id || i} className="listRow">
                     <div className="listTitle">{it.title || it.task?.title || "Task"}</div>
                     <div className="listSub">
-                      by {it.user?.name || it.owner?.name || "User"}
+                      by {it.user?.name || it.owner?.name || it.userId?.name || "User"}{" "}
+                      {`(${getOwnerRole(it) || "role unknown"})`}
                     </div>
                   </li>
                 ))
