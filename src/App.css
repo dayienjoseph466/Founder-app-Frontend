@@ -3401,3 +3401,211 @@ html, body { overflow: hidden; }
   .leftHero { text-align: center; padding: 0 8px; }
   .heroArt { margin-left: auto; margin-right: auto; max-height: 38vh; }
 }
+
+/* Scope everything under .loginShell so you can paste into App.css safely */
+.loginShell {
+  --bg-1: #1b66f0;
+  --bg-2: #65a8ff;
+  --text: #0f172a;
+  --muted: #6b7280;
+  --chip: #eef2ff;
+  --card: #ffffff;
+  --primary: #2563eb;
+
+  min-height: 100vh;
+  height: 100dvh;           /* prevents page scroll on mobile */
+  overflow: hidden;         /* keep the login screen fixed */
+  display: grid;
+  place-items: center;
+  background: radial-gradient(1200px 800px at 25% 15%, #2c7afc 0%, transparent 60%),
+              linear-gradient(135deg, var(--bg-1), var(--bg-2));
+}
+
+/* Two-column frame that never exceeds viewport height */
+.loginFrame {
+  width: min(1200px, 96vw);
+  height: clamp(560px, 80vh, 760px);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+/* ============ Left hero ============ */
+.leftHero {
+  color: #fff;
+  padding-left: min(4vw, 32px);
+}
+
+.leftTitle {
+  font-size: clamp(32px, 4.2vw, 56px);
+  font-weight: 800;
+  letter-spacing: .2px;
+  margin: 0 0 8px;
+}
+
+.leftSub {
+  font-size: clamp(16px, 1.6vw, 22px);
+  opacity: .9;
+  margin: 0 0 28px;
+}
+
+.heroArt {
+  max-width: 520px;
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 16px 40px rgba(0,0,0,.15));
+}
+
+/* ============ Right card ============ */
+.loginCard2 {
+  background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.92));
+  border-radius: 18px;
+  padding: clamp(18px, 3.2vw, 28px);
+  box-shadow:
+    0 20px 60px rgba(15, 23, 42, .16),
+    inset 0 1px 0 rgba(255,255,255,.6);
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.crumb {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.brandChip {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  background: var(--chip);
+  color: #1e293b;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+}
+.brandChip img { width: 18px; height: 18px; }
+
+.title {
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 800;
+  color: var(--text);
+  margin: 2px 0 6px;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+/* ============ Form ============ */
+.loginForm2 { display: grid; gap: 14px; }
+
+.inputWrap {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  background: #f1f5ff;
+  border: 1px solid #e3e9ff;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.leading {
+  display: inline-grid;
+  place-items: center;
+  margin-right: 8px;
+}
+
+.textInput {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  padding: 10px 4px;
+  outline: none;
+  color: #0f172a;
+}
+
+.textInput::placeholder { color: #9aa3b2; }
+
+.trailing {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: #eef2ff;
+  cursor: pointer;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.remember {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.btnPrimary {
+  appearance: none;
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  background: linear-gradient(180deg, #2b6cf3, #1f5be9);
+  color: white;
+  font-weight: 700;
+  letter-spacing: .2px;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, .35);
+}
+.btnPrimary:active { transform: translateY(1px); }
+
+.footerLinks {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+.link:hover { text-decoration: underline; }
+
+/* ============ Responsive ============ */
+@media (max-width: 980px) {
+  .loginFrame {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    height: auto;
+    align-items: start;
+  }
+  .leftHero { text-align: center; padding-left: 0; }
+  .heroArt { margin-inline: auto; max-width: 440px; }
+  .loginCard2 { margin-inline: auto; }
+}
+
+@media (max-width: 520px) {
+  .loginFrame { width: 92vw; }
+  .loginCard2 { padding: 16px; }
+  .footerLinks { flex-direction: column; align-items: center; }
+}

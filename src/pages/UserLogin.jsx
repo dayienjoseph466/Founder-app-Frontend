@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { API_URL } from "../api";
 import { useNavigate } from "react-router-dom";
-import "./UserLogin.css";
+import "./UserLogin.css"; // remove this line if you paste the CSS into App.css
 
 export default function UserLogin() {
   const [email, setEmail] = useState("");
