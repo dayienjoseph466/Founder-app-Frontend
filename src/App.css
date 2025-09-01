@@ -3966,3 +3966,23 @@ body{ color: var(--ink); background: var(--bg); }
   overflow-x: hidden;   /* prevent sideways scroll */
   padding-bottom: 40px; /* optional: breathing space */
 }
+
+/* Task Admin should scroll */
+.taWrap {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100vh - 70px); /* subtract navbar height */
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* Admin Daily Submissions should scroll */
+.dsWrap {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100vh - 70px); /* subtract navbar height */
+  padding: 16px;
+  box-sizing: border-box;
+}
