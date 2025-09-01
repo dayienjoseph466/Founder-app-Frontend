@@ -3239,3 +3239,65 @@ body:has(.authWrap) .siteNav{
 
 /* Optional: reduce header padding a touch to avoid accidental overflow */
 .alTop { padding: 14px 18px; }
+
+/* --- No-scroll admin login layout (works with global NavBar present) --- */
+
+/* Make root take the full viewport and prevent document scroll */
+html, body, #root { height: 100%; overflow: hidden; }
+body { margin: 0; }
+
+/* If you used <div class="alPage noScroll"> already */
+.alPage.noScroll {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;              /* block page scroll */
+}
+
+/* Tell the CSS how tall your global NavBar is */
+:root { --site-nav-h: 72px; }    /* tweak if your navbar isn't 72px */
+
+/* Blue header ("Founders App  | Back to site") inside the login page */
+.alTop {
+  --al-top-h: 56px;              /* visible height of the blue header */
+  height: var(--al-top-h);
+  flex: 0 0 var(--al-top-h);
+  padding: 12px 18px;
+}
+
+/* The gradient section fills the rest of the viewport, no scroll */
+.alCenter {
+  /* 100vh minus (global navbar + this page's blue header) */
+  min-height: calc(100vh - var(--site-nav-h) - var(--al-top-h));
+  max-height: calc(100vh - var(--site-nav-h) - var(--al-top-h));
+  display: grid;
+  place-items: center;
+  overflow: hidden;              /* prevent inner scrollbars */
+  padding: 16px;                 /* small so it never overflows */
+}
+
+/* Compact card (smaller than before) */
+.alCard.compact {
+  max-width: 420px;
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: 16px;
+}
+
+/* Tighten vertical rhythm so the card stays short */
+.alTitle.small { font-size: 28px; margin-bottom: 2px; }
+.alSubtitle { margin: 0 0 10px; }
+.alForm { gap: 6px; }
+.alLabel { margin: 8px 0 4px; }
+.alBadge { padding: 8px 10px; border-radius: 10px; }
+.alBtn.primary { margin-top: 6px; }
+
+/* Make inputs visually compact */
+.alField { height: 44px; }
+.alInput { height: 44px; }
+
+/* Optional: if your global NavBar has a different height, adjust here */
+@media (max-width: 640px) {
+  :root { --site-nav-h: 64px; }
+  .alTop { --al-top-h: 52px; }
+}
