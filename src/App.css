@@ -3930,3 +3930,30 @@ body{ color: var(--ink); background: var(--bg); }
   .grid{ grid-template-columns: 1fr; }
   .summaryPill{ margin-left: 0; }
 }
+
+/* Make login pages fixed and non-scrollable */
+.loginShell,
+.alPage {
+  height: 100vh;       /* full screen height */
+  overflow: hidden;    /* prevent scrolling */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure the login card centers properly */
+.loginFrame,
+.alCenter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Dashboard (and admin dashboard) should scroll normally */
+.dash,
+.adminDash {
+  min-height: 100vh;
+  overflow-y: auto;    /* allow vertical scrolling */
+  overflow-x: hidden;
+}
