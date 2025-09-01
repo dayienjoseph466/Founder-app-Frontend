@@ -94,22 +94,21 @@ export default function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateStr]);
 
-  // inbox + lifetime
+  // inbox + lifetime (also refresh when date changes so the list matches the selected day)
   useEffect(() => {
     loadInbox();
     loadLifetime();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [me?.role]);
+  }, [me?.role, dateStr]);
 
   async function loadInbox() {
     try {
-      // server route that actually exists
-      const r = await fetch(`${API_URL}/api/reviews/pending?date=${encodeURIComponent(dateStr)}`, {
-        headers: authHeader,
-      });
+      const r = await fetch(
+        `${API_URL}/api/reviews/pending?date=${encodeURIComponent(dateStr)}`,
+        { headers: authHeader }
+      );
       const raw = r.ok ? await r.json() : [];
       const arr = Array.isArray(raw) ? raw : [];
-      // server returns submitter under userId
       const filtered = arr.filter((it) => canReview(me?.role, it?.userId?.role));
       setReviewInbox(filtered);
     } catch {
@@ -208,7 +207,8 @@ export default function Dashboard() {
       <header className="dashHeader">
         <h1 className="dashTitle">Daily Dashboard</h1>
         <p className="dashSub">
-          {me?.name ? `Hello ${me.name}. ` : ""}{me?.role ? `Role ${me.role}` : ""}
+          {me?.name ? `Hello ${me.name}. ` : ""}
+          {me?.role ? `Role ${me.role}` : ""}
         </p>
       </header>
 
@@ -249,7 +249,10 @@ export default function Dashboard() {
                 const required = summary?.required ?? 2;
 
                 return (
-                  <div key={task._id} className={`card taskCard ${done ? theme.key : "neutral"}`}>
+                  <div
+                    key={task._id}
+                    className={`card taskCard ${done ? theme.key : "neutral"}`}
+                  >
                     <div className="row headRow">
                       <div className={`statusDot ${theme.key}`} />
                       <strong className="taskTitle">{task.title}</strong>
@@ -261,7 +264,10 @@ export default function Dashboard() {
 
                       <div className="grow" />
                       {done && !editing && (
-                        <button className="btn ghost" onClick={() => startResubmit(task._id)}>
+                        <button
+                          className="btn ghost"
+                          onClick={() => startResubmit(task._id)}
+                        >
                           Resubmit
                         </button>
                       )}
@@ -314,7 +320,10 @@ export default function Dashboard() {
                         <strong>Review progress:</strong>{" "}
                         {approvals}/{required} approved
                         {rejections > 0 ? (
-                          <span className="rejectedText"> — {rejections} rejected</span>
+                          <span className="rejectedText">
+                            {" "}
+                            — {rejections} rejected
+                          </span>
                         ) : null}
                       </div>
                     )}
@@ -324,14 +333,13 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* full review panel for COO and Marketing etc */}
+          {/* Full review panel (for COO / Marketing / etc.) */}
           <div className="card" style={{ marginTop: 16 }}>
             <ReviewsPanel
               dateStr={dateStr}
               onReviewed={() => {
-                // refresh the small count on the right after any action
+                // refresh right-side count and left-side statuses after an action
                 loadInbox();
-                // also refresh logs so the status chips update
                 const qs = new URLSearchParams({ date: dateStr });
                 fetch(`${API_URL}/api/logs?${qs}`, { headers: authHeader })
                   .then((r) => (r.ok ? r.json() : []))
@@ -356,7 +364,8 @@ export default function Dashboard() {
                   <li key={it._id || i} className="listRow">
                     <div className="listTitle">{it.taskId?.title || "Task"}</div>
                     <div className="listSub">
-                      by {it.userId?.name || "User"} ({it.userId?.role || "role unknown"})
+                      by {it.userId?.name || "User"} (
+                      {it.userId?.role || "role unknown"})
                     </div>
                   </li>
                 ))
@@ -373,7 +382,9 @@ export default function Dashboard() {
                 {lifetime.slice(0, 12).map((row, idx) => (
                   <li
                     key={String(row.userId || row.name) + idx}
-                    className={`boardRow ${idx === 0 ? "gold" : idx === 1 ? "silver" : idx === 2 ? "bronze" : ""}`}
+                    className={`boardRow ${
+                      idx === 0 ? "gold" : idx === 1 ? "silver" : idx === 2 ? "bronze" : ""
+                    }`}
                   >
                     <div className="rank">{idx + 1}</div>
                     <div className="who">
@@ -391,10 +402,18 @@ export default function Dashboard() {
           <div className="card">
             <h3 className="sectionTitle">Your score today</h3>
             <div className="todayScore">
-              <div><strong>Total</strong> {score.total}</div>
-              <div><strong>Raw</strong> {score.rawPoints}</div>
-              <div><strong>Proof bonus</strong> {score.proofBonus}</div>
-              <div><strong>Verify bonus</strong> {score.verifyBonus}</div>
+              <div>
+                <strong>Total</strong> {score.total}
+              </div>
+              <div>
+                <strong>Raw</strong> {score.rawPoints}
+              </div>
+              <div>
+                <strong>Proof bonus</strong> {score.proofBonus}
+              </div>
+              <div>
+                <strong>Verify bonus</strong> {score.verifyBonus}
+              </div>
             </div>
           </div>
         </aside>
