@@ -3609,3 +3609,9 @@ html, body { overflow: hidden; }
   .loginCard2 { padding: 16px; }
   .footerLinks { flex-direction: column; align-items: center; }
 }
+
+/* Subtitle text under Welcome back */
+.subtitle,
+.loginFrame p {
+  color: #ffffff !important;   /* force white color */
+}
