@@ -110,6 +110,15 @@ export default function App() {
         <Route path="/login" element={<UserLogin />} />
         <Route path="/admin-login" element={<AdminLogin />} />
 
+        {/* Forgot and Reset for users */}
+        <Route path="/forgot" element={<ForgotPassword kind="user" />} />
+        <Route path="/forgot-password" element={<ForgotPassword kind="user" />} />
+        <Route path="/reset-password" element={<ResetPassword kind="user" />} />
+
+        {/* Forgot and Reset for admin */}
+        <Route path="/admin/forgot-password" element={<ForgotPassword kind="admin" />} />
+        <Route path="/admin/reset-password" element={<ResetPassword kind="admin" />} />
+
         {/* User area */}
         <Route
           path="/dashboard"
@@ -153,8 +162,6 @@ export default function App() {
             </AdminRoute>
           }
         />
-        <Route path="/forgot" element={<ForgotPassword />} />
-<Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Default */}
         <Route path="*" element={<Navigate to="/login" replace />} />
@@ -162,4 +169,3 @@ export default function App() {
     </>
   );
 }
-
