@@ -3615,3 +3615,10 @@ html, body { overflow: hidden; }
 .loginFrame p {
   color: #ffffff !important;   /* force white color */
 }
+
+/* Only change the subtitle on the left blue side */
+.heroArt + p,
+.heroText,
+.leftHero p {
+  color: #ffffff !important;   /* pure white */
+}
