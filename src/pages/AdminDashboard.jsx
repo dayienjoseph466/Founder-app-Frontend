@@ -1,6 +1,7 @@
+// client/src/pages/AdminLogin.jsx
 import React, { useState } from "react";
 import { API_URL } from "../api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -14,7 +15,8 @@ export default function AdminLogin() {
     e.preventDefault();
     try {
       setLoading(true);
-      const r = await fetch(`${API_URL}/api/auth/login`, {
+      // use ADMIN endpoint
+      const r = await fetch(`${API_URL}/api/admin/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -23,9 +25,10 @@ export default function AdminLogin() {
         const t = await r.text().catch(() => "");
         throw new Error(t || "Login failed");
       }
-      const data = await r.json();
+      const data = await r.json(); // { token, admin }
       localStorage.setItem("token", data.token);
-      localStorage.setItem("me", JSON.stringify(data.user));
+      // ensure role is ADMIN for guards/nav
+      localStorage.setItem("me", JSON.stringify({ ...data.admin, role: "ADMIN" }));
       nav("/admin", { replace: true });
     } catch (err) {
       alert(err.message || "Login failed");
@@ -117,7 +120,7 @@ export default function AdminLogin() {
                 <input type="checkbox" checked={remember} onChange={(e)=>setRemember(e.target.checked)} />
                 <span>Remember me</span>
               </label>
-              <a className="link" href="#" onClick={(e)=>e.preventDefault()}>Forgot password?</a>
+              <Link className="link" to="/admin/forgot-password">Forgot password?</Link>
             </div>
 
             {/* SUBMIT */}
