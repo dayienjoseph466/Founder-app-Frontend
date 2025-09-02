@@ -4002,3 +4002,8 @@ body{ color: var(--ink); background: var(--bg); }
 .forgotWrap h2 {
   color: #000000 !important;
 }
+
+/* Force forgot password heading to black */
+.forgotWrap h2 {
+  color: #000 !important;
+}
