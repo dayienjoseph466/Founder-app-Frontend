@@ -4034,3 +4034,26 @@ body{ color: var(--ink); background: var(--bg); }
   overflow-y: auto;    /* THIS makes only the main area scroll */
   padding: 20px;
 }
+
+/* ---- Fine-tune admin layout so content isn't under the top nav ---- */
+
+/* If your nav is about ~84px tall, keep this; change if needed */
+:root { --nav-h: 84px; }
+
+.adShell {
+  height: calc(100vh - var(--nav-h));
+}
+
+/* Make sure the scrollable main has a bit of breathing room below the nav */
+.adMain {
+  box-sizing: border-box;      /* padding counts inside the height */
+  padding-top: 16px;           /* keeps the hero from tucking under the navbar */
+  height: calc(100% - 16px);   /* keep the same visible area after padding */
+  overflow-y: auto;            /* (already set in your earlier fix) */
+}
+
+/* Optional: align the sidebar top with the main section visually */
+.adSidebar {
+  box-sizing: border-box;
+  padding-top: 16px;
+}
