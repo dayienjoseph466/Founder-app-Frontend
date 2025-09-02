@@ -3997,3 +3997,8 @@ body{ color: var(--ink); background: var(--bg); }
   background: #d6ecff;
   color: #000000;
 }
+
+/* Make forgot password heading black */
+.forgotWrap h2 {
+  color: #000000 !important;
+}
