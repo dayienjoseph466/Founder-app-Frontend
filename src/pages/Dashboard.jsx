@@ -328,6 +328,36 @@ export default function Dashboard() {
                         ) : null}
                       </div>
                     )}
+
+                    {/* ------- ADDED: show reviewer feedback ------- */}
+                    {done && Array.isArray(log?.reviews) && log.reviews.length > 0 && (
+                      <div
+                        className="feedbackBox"
+                        style={{
+                          marginTop: 8,
+                          padding: 10,
+                          borderRadius: 10,
+                          background: "rgba(0,0,0,0.03)",
+                        }}
+                      >
+                        <strong>Reviewer feedback</strong>
+                        <ul style={{ margin: "6px 0 0", paddingLeft: 16 }}>
+                          {log.reviews.map((rv, i) => (
+                            <li key={i} style={{ marginBottom: 6 }}>
+                              <div className="small muted">
+                                {(rv.name || "Reviewer") +
+                                  (rv.role ? ` (${rv.role})` : "")}{" "}
+                                — {rv.decision}
+                              </div>
+                              {rv.comment ? (
+                                <div style={{ whiteSpace: "pre-wrap" }}>{rv.comment}</div>
+                              ) : null}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {/* ------- /ADDED ------- */}
                   </div>
                 );
               })}
