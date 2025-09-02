@@ -79,7 +79,12 @@ function NavBar() {
             <Link to="/admin-login" className="navLink">Admin Login</Link>
           </>
         )}
-        {!inAdmin && !onLogin && <Link to="/dashboard" className="navLink">Dashboard</Link>}
+        {!inAdmin && !onLogin && (
+          <>
+            <Link to="/dashboard" className="navLink">Dashboard</Link>
+            <Link to="/dashboard#announcements" className="navLink">Announcements</Link> {/* added */}
+          </>
+        )}
         {inAdmin && isAdmin && (
           <>
             <Link to="/admin" className="navLink">Admin Home</Link>

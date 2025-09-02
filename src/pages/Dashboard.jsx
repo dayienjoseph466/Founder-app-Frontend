@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { API_URL } from "../api";
 import ReviewsPanel from "../components/ReviewsPanel";
+import AnnouncementsPanel from "../components/AnnouncementsPanel"; // added
 import "../App.css";
 
 function toYMD(d) {
@@ -351,6 +352,8 @@ export default function Dashboard() {
 
         {/* right column */}
         <aside className="stack">
+          <AnnouncementsPanel /> {/* added */}
+
           <div className="card">
             <div className="row">
               <h3 className="sectionTitle m0">Tasks for review</h3>

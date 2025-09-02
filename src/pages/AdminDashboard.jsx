@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { API_URL, authHeader } from "../api";
 import { useNavigate } from "react-router-dom";
+import AnnouncementsPanel from "../components/AnnouncementsPanel"; // added
 
 export default function AdminDashboard() {
   const nav = useNavigate();
@@ -173,6 +174,11 @@ export default function AdminDashboard() {
               {loading ? "—" : stats.totalLifetime.toLocaleString()}
             </div>
           </article>
+        </section>
+
+        {/* Announcements (added) */}
+        <section className="adPanel">
+          <AnnouncementsPanel />
         </section>
 
         {/* Content grid: table + activity */}
