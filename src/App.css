@@ -3986,3 +3986,14 @@ body{ color: var(--ink); background: var(--bg); }
   padding: 16px;
   box-sizing: border-box;
 }
+
+/* Selection style only inside forgot password page */
+.forgotWrap ::selection {
+  background: #d6ecff; /* light blue background */
+  color: #000000;      /* black text */
+}
+
+.forgotWrap ::-moz-selection {
+  background: #d6ecff;
+  color: #000000;
+}
