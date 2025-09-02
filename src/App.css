@@ -4007,3 +4007,9 @@ body{ color: var(--ink); background: var(--bg); }
 .forgotWrap h2 {
   color: #000 !important;
 }
+
+/* Force forgot password page text to black */
+.forgotWrap .forgotTitle,
+.forgotWrap .forgotText {
+  color: #000 !important;
+}

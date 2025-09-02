@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import { API_URL } from "../api";
 
 export default function ForgotPassword({ kind }) {
-  // if you render this under /admin/... it will switch to admin mode
   const { pathname } = useLocation();
   const isAdmin = kind ? kind === "admin" : pathname.startsWith("/admin");
 
@@ -26,7 +25,6 @@ export default function ForgotPassword({ kind }) {
         body: JSON.stringify({ email }),
       });
 
-      // backend returns json like { ok: true, message: "..." }
       let message = "if that email exists we sent a reset link";
       try {
         const data = await r.json();
@@ -44,9 +42,9 @@ export default function ForgotPassword({ kind }) {
   }
 
   return (
-    <div style={{ maxWidth: 420, margin: "40px auto", padding: 16 }}>
-      <h2>{isAdmin ? "admin forgot password" : "forgot password"}</h2>
-      <p>enter your email and we will send a reset link</p>
+    <div className="forgotWrap" style={{ maxWidth: 420, margin: "40px auto", padding: 16 }}>
+      <h2 className="forgotTitle">{isAdmin ? "admin forgot password" : "forgot password"}</h2>
+      <p className="forgotText">enter your email and we will send a reset link</p>
 
       <form onSubmit={submit}>
         <input
@@ -61,7 +59,7 @@ export default function ForgotPassword({ kind }) {
         </button>
       </form>
 
-      {msg ? <p style={{ marginTop: 12 }}>{msg}</p> : null}
+      {msg ? <p className="forgotText" style={{ marginTop: 12 }}>{msg}</p> : null}
     </div>
   );
 }
