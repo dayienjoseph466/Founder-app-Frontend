@@ -4013,3 +4013,24 @@ body{ color: var(--ink); background: var(--bg); }
 .forgotWrap .forgotText {
   color: #000 !important;
 }
+
+/* Make the whole shell take full height */
+.adShell {
+  display: flex;
+  height: 100vh;       /* lock viewport height */
+  overflow: hidden;    /* prevent double scrollbars */
+}
+
+/* Sidebar should stay fixed size */
+.adSidebar {
+  width: 240px;        /* or whatever you use */
+  flex-shrink: 0;
+  overflow-y: auto;    /* optional if sidebar needs scroll */
+}
+
+/* Main section should scroll */
+.adMain {
+  flex: 1;
+  overflow-y: auto;    /* THIS makes only the main area scroll */
+  padding: 20px;
+}
